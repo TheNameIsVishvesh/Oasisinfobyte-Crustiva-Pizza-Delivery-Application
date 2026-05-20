@@ -27,6 +27,24 @@ A professional, production-grade full-stack Pizza Delivery Application built on 
 
 ---
 
+## 🔑 Default Administrator Credentials & DB Seeding
+
+When the MongoDB connection is established for the first time, our built-in `dbSeeder.js` automatically populates the database with essential stock, gourmet recipes, and a default administrative account.
+
+### Administrative Login Details:
+* **Admin Email:** `admin@slicelife.com`
+* **Admin Password:** `adminpassword123`
+
+### Pre-Seeded Catalog Items:
+1. **5 Bases:** Thin Crust, Thick Crust, Gluten-Free Crust, Cheese Burst Crust, Flatbread
+2. **5 Sauces:** Classic Marinara, Creamy Garlic Alfredo, Smoky Barbecue, Spicy Buffalo, Basil Pesto
+3. **Cheeses:** Mozzarella, Parmesan, Cheddar, Ricotta, Vegan Cheese
+4. **Veggies:** Sliced Mushrooms, Sweet Corn, Crisp Capsicum, Red Onions, Black Olives
+5. **Meats:** Spicy Pepperoni, Smoked Chicken Tikka, Juicy Meatballs, Bacon Strips, Anchovies
+6. **5 Gourmet Recipes:** Margherita Classic, Veggie Supreme, Meat Lovers Feast, Pesto Dream, Buffalo Firehouse
+
+---
+
 ## 📂 Repository Structure
 
 ```text
@@ -41,28 +59,23 @@ Pizza Delivery Application/
 ├── client/                    # React frontend application
 │   ├── src/
 │   │   ├── assets/            # Vector graphics, logos, and images
-│   │   ├── components/        # Shared components (Buttons, Modals, Cards)
+│   │   ├── components/        # Shared components (Navbar, Guards)
 │   │   ├── context/           # React Context state providers (Auth, Cart)
-│   │   ├── hooks/             # Custom state hooks
-│   │   ├── pages/             # Route pages (Home, Menu, Customizer, Checkout)
-│   │   ├── router/            # Custom client router mappings
+│   │   ├── pages/             # Route pages (Home, PizzaCustomizer, CartPage, OrdersPage)
+│   │   │   └── admin/         # Administrative views (Dashboard, Inventory, Orders)
 │   │   ├── services/          # API integration files (Axios client)
-│   │   └── utils/             # Helper formatters and math utilities
 │   │   ├── App.jsx            # Main app shell & router mapping
-│   │   ├── index.css          # Main stylesheet with tailwind injections
 │   │   └── main.jsx           # ReactDOM browser mount point
 │   ├── index.html             # Entry HTML document with Google Fonts imports
-│   ├── postcss.config.js      # PostCSS processor integration
-│   ├── tailwind.config.js     # Premium theme & tailwind configuration
+│   ├── vercel.json            # Vercel SPA rewrite configurations
 │   └── vite.config.js         # Vite configuration with reverse proxy logic
 ├── server/                    # Express.js backend application
 │   ├── src/
-│   │   ├── config/            # Third-party setups (DB, Razorpay, Resend)
-│   │   ├── controllers/       # Controller handler callbacks
+│   │   ├── config/            # Third-party setups (DB, dbSeeder)
+│   │   ├── controllers/       # Controller handler callbacks (Auth, Order, Pizza, Inventory)
 │   │   ├── middleware/        # JWT security & validation middleware
-│   │   ├── models/            # MongoDB schema models (User, Order, Pizza)
+│   │   ├── models/            # MongoDB schema models (User, Order, Pizza, Inventory)
 │   │   ├── routes/            # Express endpoint mappings
-│   │   ├── utils/             # Error classes and helper triggers
 │   │   └── server.js          # App initialization and listener entry
 │   ├── .env                   # Secret environmental keys (Git-ignored)
 │   ├── .env.example           # Shared placeholder secrets template
@@ -94,7 +107,10 @@ Ensure keys are set up correctly. Copy backend placeholders:
 cd server
 cp .env.example .env
 ```
-Open `server/.env` and update the local connections (e.g., `MONGO_URI`, `JWT_SECRET`).
+Open `server/.env` and update the local connections:
+* `MONGO_URI`: Your MongoDB connection string (defaults to `mongodb://localhost:27017/pizza_db`).
+* `JWT_SECRET`: Secret key used for signing JWT payloads.
+* `RESEND_API_KEY`: API key for email delivery (or falls back to terminal logs during local testing).
 
 ### 3. Install Dependencies
 Run the installation scripts in both workspaces:
@@ -126,6 +142,45 @@ Open your browser and navigate to:
 * **Backend Health Route:** `http://localhost:5173/api/health` (automatically proxied directly to port 5000)
 
 If the dashboard displays a green **"Successfully Connected"** badge, your environment is correctly configured!
+
+---
+
+## 🍕 Unique SaaS Features Built-In
+
+### 1. Visual Customization Math
+When choosing the customizer on any baseline gourmet pizza, the interface allows toggling bases, sauces, and toppings. If any ingredient stock level falls to `0` in MongoDB, the selection is automatically disabled in real time. Prices recalculate dynamically based on topping premiums.
+
+### 2. Razorpay Signature Verification
+Payments utilize the official Razorpay script loaded dynamically. Once processed in Test Mode, the client receives signature variables (`razorpay_payment_id`, `razorpay_order_id`, `razorpay_signature`) and cryptographically verifies them in the backend using Hmac SHA256 before finalizing the order.
+
+### 3. Live Stepper Progress Polling
+The order tracking dashboard contains a live progress stepper displaying:
+`Order Received ➡️ In Kitchen ➡️ Sent To Delivery ➡️ Delivered`
+Whenever active orders (non-delivered) exist, the client schedules an automatic **5-second polling task** that silencely queries the backend status, ensuring the screen reflects administrative changes instantly!
+
+### 4. Automatic Stock Deduction & Low-Stock Alerts
+Upon successful payment validation, the backend automatically:
+1. Decrements stock counts in the `Inventory` collection for every crust base, sauce spread, cheese blend, and topping chosen in the order.
+2. Evaluates remaining stock against safety `threshold` warnings.
+3. If an ingredient dips below safety warning levels, an email notification is automatically dispatched to all registered admins using the **Resend API SDK** (with automatic terminal fallback loggers).
+
+---
+
+## ☁️ Cloud Production Deployment
+
+### Frontend (Vercel)
+Deploying the client-side SPA to Vercel is streamlined with the pre-configured `client/vercel.json` file.
+1. Connect your repository to Vercel.
+2. Set the **Root Directory** to `client`.
+3. Configure the build settings:
+   * Build Command: `npm run build`
+   * Output Directory: `dist`
+4. Deploy! Rewrites will automatically map client routes to `/index.html` to avoid 404s.
+
+### Backend (Render)
+1. Deploy the `server` directory to Render as a **Web Service**.
+2. Add the environmental variables defined in your `server/.env` under the Service Settings tab.
+3. Set the **Build Command** to `npm install` and the **Start Command** to `npm start`.
 
 ---
 
