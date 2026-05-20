@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Pizza Crust background -->
+  <path d="M 50 90 A 40 40 0 0 1 14.64 30 L 50 10 Z" fill="#E65100" />
+  <!-- Pizza Crust outer layer -->
+  <path d="M 50 85 A 35 35 0 0 1 19.14 32.5 L 50 15 Z" fill="#FFB74D" />
+  <!-- Cheese base -->
+  <path d="M 50 80 A 30 30 0 0 1 23.64 35 L 50 20 Z" fill="#FFD54F" />
+  <!-- Pepperonis -->
+  <circle cx="38" cy="45" r="5" fill="#C62828" />
+  <circle cx="45" cy="65" r="4" fill="#C62828" />
+  <circle cx="32" cy="60" r="4.5" fill="#C62828" />
+  <!-- Herbs/basil pieces -->
+  <path d="M 45 35 Q 48 32 45 30 Q 42 32 45 35 Z" fill="#2E7D32" />
+  <path d="M 28 48 Q 31 45 28 43 Q 25 45 28 48 Z" fill="#2E7D32" />
+  <!-- Cheese details (melted spots) -->
+  <ellipse cx="45" cy="52" rx="2" ry="4" fill="#FFC107" transform="rotate(-30 45 52)" />
+  <ellipse cx="33" cy="72" rx="1.5" ry="3" fill="#FFC107" transform="rotate(45 33 72)" />
+</svg>
