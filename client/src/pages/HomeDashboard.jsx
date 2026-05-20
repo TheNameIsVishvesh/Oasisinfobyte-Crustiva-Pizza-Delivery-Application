@@ -159,9 +159,9 @@ export default function HomeDashboard() {
                   {/* Decorative SVG Graphic Icon wrapper */}
                   <div class="w-full h-44 bg-[#231e1a] rounded-2xl flex items-center justify-center p-6 border border-white/5 relative overflow-hidden group-hover:bg-[#2c2621] transition-colors duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-28 h-28 transform group-hover:rotate-12 transition-transform duration-500">
-                      <!-- Crust outer layer -->
+                      {/* Crust outer layer */}
                       <path d="M 50 85 A 35 35 0 0 1 19.14 32.5 L 50 15 Z" fill="#FFB74D" />
-                      <!-- Cheese base -->
+                      {/* Cheese base */}
                       <path d="M 50 80 A 30 30 0 0 1 23.64 35 L 50 20 Z" fill="#FFD54F" />
                       {/* Veg pepperonis */}
                       {pizza.category === 'veg' ? (
