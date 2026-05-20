@@ -3,6 +3,15 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
+// Import route modules
+import authRoutes from './routes/authRoutes.js';
+import pizzaRoutes from './routes/pizzaRoutes.js';
+import inventoryRoutes from './routes/inventoryRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+
+// Import DB seeder
+import { seedDatabase } from './config/dbSeeder.js';
+
 // Load environment variables
 dotenv.config();
 
@@ -17,6 +26,12 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Mount Routing Handlers
+app.use('/api/auth', authRoutes);
+app.use('/api/pizzas', pizzaRoutes);
+app.use('/api/inventory', inventoryRoutes);
+app.use('/api/orders', orderRoutes);
+
 // Health Check Route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
@@ -30,18 +45,18 @@ app.get('/api/health', (req, res) => {
 });
 
 // Database Connection
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/pizza_db';
 
-if (!MONGO_URI) {
-  console.warn('⚠️ WARNING: MONGO_URI environment variable is missing. Database connection skipped.');
-} else {
-  mongoose.connect(MONGO_URI)
-    .then(() => console.log('✅ Successfully connected to MongoDB Atlas.'))
-    .catch((err) => {
-      console.error('❌ MongoDB Atlas connection error:');
-      console.error(err.message);
-    });
-}
+mongoose.connect(MONGO_URI)
+  .then(async () => {
+    console.log('✅ Successfully connected to MongoDB.');
+    // Trigger automatic baseline seeding
+    await seedDatabase();
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:');
+    console.error(err.message);
+  });
 
 // Start Server
 const server = app.listen(PORT, () => {
