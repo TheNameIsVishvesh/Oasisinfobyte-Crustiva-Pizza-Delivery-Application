@@ -68,7 +68,7 @@ export default function Register() {
       <div class="w-full max-w-md glass-dark p-8 rounded-[2rem] border border-white/5 shadow-premium text-white z-10">
         <div class="text-center space-y-2 mb-8">
           <h2 class="text-3xl font-extrabold tracking-tight">Create Account</h2>
-          <p class="text-sm text-white/50">Join SliceLife to customize your hot gourmet crusts</p>
+          <p class="text-sm text-white/50">Join Crustiva to customize your hot gourmet crusts</p>
         </div>
 
         {/* Success Banner */}

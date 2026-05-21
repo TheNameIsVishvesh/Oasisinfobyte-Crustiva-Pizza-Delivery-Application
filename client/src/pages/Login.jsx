@@ -155,11 +155,14 @@ export default function Login() {
             Don't have an account?{' '}
             <Link to="/register" class="text-pizza-primary font-bold hover:underline">Create Account</Link>
           </p>
-          <div class="bg-white/5 p-3 rounded-xl border border-white/5 text-left text-[11px] leading-relaxed flex gap-2">
-            <HelpCircle class="w-4 h-4 shrink-0 text-pizza-accent" />
-            <div>
-              <span class="font-bold text-white/70 block">Demo Admin Details:</span>
-              Email: <code class="text-pizza-accent">admin@slicelife.com</code> | Pass: <code class="text-pizza-accent">adminpassword123</code>
+          <div class="bg-[#0F0B0A] p-3.5 rounded-xl border border-white/5 text-left text-[11px] leading-relaxed space-y-2">
+            <div className="flex gap-2">
+              <HelpCircle class="w-4 h-4 shrink-0 text-pizza-gold" />
+              <span class="font-bold text-white/70 block uppercase tracking-wider text-[9px]">Developer Demo Logins</span>
+            </div>
+            <div className="space-y-1 text-white/60">
+              <p>🟢 <strong className="text-pizza-light">Customer:</strong> <code class="text-pizza-primary font-mono">user@crustiva.com</code> / <code class="text-pizza-primary font-mono">userpassword123</code></p>
+              <p>👑 <strong className="text-pizza-light">Admin:</strong> <code class="text-pizza-primary font-mono">admin@crustiva.com</code> / <code class="text-pizza-primary font-mono">adminpassword123</code></p>
             </div>
           </div>
         </div>

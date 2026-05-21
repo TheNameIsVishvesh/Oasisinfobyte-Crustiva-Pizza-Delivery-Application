@@ -3,11 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import API from '../services/api';
-import { Trash2, CreditCard, ShoppingBag, MapPin, Phone, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Trash2, CreditCard, ShoppingBag, MapPin, Phone, AlertTriangle, CheckCircle2, Lock, Key, ShieldCheck, Sparkles } from 'lucide-react';
 
 export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [deliveryPhone, setDeliveryPhone] = useState('');
@@ -70,7 +70,7 @@ export default function CartPage() {
         key: 'rzp_test_placeholder', // Fallback to client standard test mode
         amount,
         currency,
-        name: 'SliceLife Gourmet Pizzeria',
+        name: 'Crustiva Gourmet Pizzeria',
         description: `Order checkout for ${user?.name || 'Customer'}`,
         image: '/src/assets/pizza-logo.svg',
         order_id: razorpayOrderId,
@@ -83,7 +83,7 @@ export default function CartPage() {
           address: deliveryAddress,
         },
         theme: {
-          color: '#ff5a36', // Brand color matching warm orange
+          color: '#FF6B35', // Brand color matching Crustiva premium orange
         },
         handler: async (response) => {
           setLoading(true);
@@ -247,76 +247,141 @@ export default function CartPage() {
             </div>
           </div>
 
-          {/* Right: Address Form & Summary */}
+          {/* Right: Address Form & Summary or Auth Locked prompt */}
           <div class="lg:col-span-5 space-y-6">
-            {/* Delivery address details form */}
-            <form onSubmit={handleCheckout} class="glass-dark p-6 rounded-[2rem] border border-white/5 space-y-5">
-              <h3 class="font-bold text-lg border-b border-white/5 pb-4">Delivery & Contact</h3>
-              
-              <div class="space-y-1.5">
-                <label class="text-xs font-semibold text-white/70 tracking-wide uppercase flex items-center gap-1.5">
-                  <MapPin class="w-3.5 h-3.5 text-pizza-primary" />
-                  <span>Delivery Address</span>
-                </label>
-                <textarea
-                  placeholder="Enter complete house address, building/floor numbers, street details, landmark..."
-                  value={deliveryAddress}
-                  onChange={(e) => setDeliveryAddress(e.target.value)}
-                  class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary focus:ring-1 focus:ring-pizza-primary outline-none transition-all duration-300 text-sm placeholder:text-white/20 min-h-24 resize-none"
-                  required
-                ></textarea>
-              </div>
+            {isAuthenticated ? (
+              /* Delivery address details form for signed-in users */
+              <form onSubmit={handleCheckout} class="glass-dark p-6 rounded-[2rem] border border-white/5 space-y-5 shadow-premium">
+                <h3 class="font-bold text-lg border-b border-white/5 pb-4">Delivery & Contact</h3>
+                
+                <div class="space-y-1.5">
+                  <label class="text-xs font-semibold text-white/70 tracking-wide uppercase flex items-center gap-1.5">
+                    <MapPin class="w-3.5 h-3.5 text-pizza-primary" />
+                    <span>Delivery Address</span>
+                  </label>
+                  <textarea
+                    placeholder="Enter complete house address, building/floor numbers, street details, landmark..."
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary focus:ring-1 focus:ring-pizza-primary outline-none transition-all duration-300 text-sm placeholder:text-white/20 min-h-24 resize-none"
+                    required
+                  ></textarea>
+                </div>
 
-              <div class="space-y-1.5">
-                <label class="text-xs font-semibold text-white/70 tracking-wide uppercase flex items-center gap-1.5">
-                  <Phone class="w-3.5 h-3.5 text-pizza-primary" />
-                  <span>Contact Phone Number</span>
-                </label>
-                <input
-                  type="tel"
-                  placeholder="10-digit mobile contact number"
-                  value={deliveryPhone}
-                  onChange={(e) => setDeliveryPhone(e.target.value)}
-                  class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary focus:ring-1 focus:ring-pizza-primary outline-none transition-all duration-300 text-sm placeholder:text-white/20"
-                  required
-                />
-              </div>
+                <div class="space-y-1.5">
+                  <label class="text-xs font-semibold text-white/70 tracking-wide uppercase flex items-center gap-1.5">
+                    <Phone class="w-3.5 h-3.5 text-pizza-primary" />
+                    <span>Contact Phone Number</span>
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="10-digit mobile contact number"
+                    value={deliveryPhone}
+                    onChange={(e) => setDeliveryPhone(e.target.value)}
+                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary focus:ring-1 focus:ring-pizza-primary outline-none transition-all duration-300 text-sm placeholder:text-white/20"
+                    required
+                  />
+                </div>
 
-              {/* Order total math summary */}
-              <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3 text-xs">
-                <div class="flex justify-between">
-                  <span class="text-white/50">Subtotal:</span>
-                  <span class="font-bold">₹{subtotal}</span>
+                {/* Order total math summary */}
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3 text-xs">
+                  <div class="flex justify-between">
+                    <span class="text-white/50">Subtotal:</span>
+                    <span class="font-bold">₹{subtotal}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-white/50">Custom Topping Premium:</span>
+                    <span class="font-bold text-emerald-400">Included</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-white/50">Express Delivery Charge:</span>
+                    <span class="font-bold text-emerald-400">FREE</span>
+                  </div>
+                  <div class="flex justify-between pt-3 border-t border-white/5 text-sm">
+                    <span class="font-bold text-white/80">Grand Total:</span>
+                    <span class="text-xl font-black text-pizza-accent">₹{subtotal}</span>
+                  </div>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-white/50">Custom Topping Premium:</span>
-                  <span class="font-bold text-emerald-400">Included</span>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  class="w-full py-4 bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white font-bold rounded-xl text-sm transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {loading ? (
+                    <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <>
+                      <CreditCard class="w-4 h-4" />
+                      <span>Proceed to Razorpay (Test Mode)</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            ) : (
+              /* Gorgeous, premium auth locked screen for guest users */
+              <div class="glass-dark p-6 rounded-[2rem] border border-white/5 space-y-6 shadow-premium relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-pizza-primary/10 rounded-full blur-2xl pointer-events-none" />
+                
+                <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                  <div className="w-10 h-10 bg-pizza-primary/10 border border-pizza-primary/20 rounded-xl flex items-center justify-center text-pizza-primary">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-base text-white">Checkout is Locked</h3>
+                    <p className="text-[10px] text-pizza-subtle uppercase tracking-wider font-semibold">Crustiva Shield Active</p>
+                  </div>
                 </div>
-                <div class="flex justify-between">
-                  <span class="text-white/50">Express Delivery Charge:</span>
-                  <span class="font-bold text-emerald-400">FREE</span>
+
+                <p className="text-xs text-pizza-gray leading-relaxed">
+                  Please log in or register a customer account to unlock live doorstep tracking, secure Razorpay checkout, and personal order logs.
+                </p>
+
+                {/* Seeded Developer Credentials Display */}
+                <div className="bg-[#0F0B0A] border border-white/5 p-4 rounded-2xl space-y-3">
+                  <span className="text-[9px] font-black text-pizza-gold uppercase tracking-wider flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-pizza-gold" />
+                    <span>DEMO DEV CREDENTIALS</span>
+                  </span>
+                  
+                  <div className="space-y-2 text-[11px] text-white/70">
+                    <div className="flex justify-between border-b border-white/5 pb-1">
+                      <span className="text-pizza-gray">Customer:</span>
+                      <span className="font-bold text-pizza-light font-mono select-all">user@crustiva.com / userpassword123</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-pizza-gray">Admin Dashboard:</span>
+                      <span className="font-bold text-pizza-light font-mono select-all">admin@crustiva.com / adminpassword123</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="flex justify-between pt-3 border-t border-white/5 text-sm">
-                  <span class="font-bold text-white/80">Grand Total:</span>
-                  <span class="text-xl font-black text-pizza-accent">₹{subtotal}</span>
+
+                {/* Basket pricing summary visible to guest */}
+                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3 text-xs">
+                  <div class="flex justify-between pt-1 text-sm">
+                    <span class="font-bold text-white/80">Grand Total:</span>
+                    <span class="text-xl font-black text-pizza-gold">₹{subtotal}</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <Link
+                    to="/login?redirect=cart"
+                    className="w-full py-3.5 bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white font-bold rounded-xl text-xs uppercase tracking-wider text-center transition-all duration-300 flex items-center justify-center gap-1.5"
+                  >
+                    <Key className="w-3.5 h-3.5" />
+                    <span>Log In to Checkout</span>
+                  </Link>
+
+                  <Link
+                    to="/register"
+                    className="w-full py-3.5 bg-pizza-charcoal hover:bg-pizza-charcoal/80 text-white font-bold rounded-xl text-xs uppercase tracking-wider text-center transition-all duration-300 border border-white/10"
+                  >
+                    Register Account
+                  </Link>
                 </div>
               </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                class="w-full py-4 bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white font-bold rounded-xl text-sm transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                {loading ? (
-                  <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                ) : (
-                  <>
-                    <CreditCard class="w-4 h-4" />
-                    <span>Proceed to Razorpay (Test Mode)</span>
-                  </>
-                )}
-              </button>
-            </form>
+            )}
           </div>
         </div>
       </div>

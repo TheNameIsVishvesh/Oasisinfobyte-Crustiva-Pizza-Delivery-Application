@@ -171,7 +171,7 @@ export const verifyPaymentAndCreateOrder = async (req, res) => {
             
             // Find system administrators to notify
             const admins = await User.find({ role: 'admin' });
-            const adminEmail = admins.length > 0 ? admins[0].email : process.env.EMAIL_FROM || 'admin@slicelife.com';
+            const adminEmail = admins.length > 0 ? admins[0].email : process.env.EMAIL_FROM || 'admin@crustiva.com';
             
             // Fire email alert asynchronously
             sendLowStockEmail(adminEmail, dbItem.name, dbItem.stock, dbItem.threshold)

@@ -8,21 +8,26 @@ export default {
     extend: {
       colors: {
         pizza: {
-          primary: '#ff5a36',      // Warm orange-red
-          secondary: '#d32f2f',    // Premium red
-          dark: '#1e1b18',         // Elegant warm dark background
-          light: '#fffaf5',        // Soft cream white
-          accent: '#ffb300',       // Golden yellow for cheese/highlight
-          charcoal: '#2c2520',     // Dark warm gray
+          primary: '#FF6B35',      // Premium orange
+          secondary: '#FF4D4D',    // Tomato red
+          dark: '#0F0B0A',         // Deep warm black
+          espresso: '#1A120F',     // Rich espresso brown
+          charcoal: '#241816',     // Soft charcoal
+          gold: '#FFB627',         // Melted cheese gold
+          basil: '#35C26B',        // Basil green
+          light: '#F8F5F2',        // Soft white
+          gray: '#B8ACA3',         // Warm gray
+          subtle: '#7A6E67',       // Muted subtle
         }
       },
       fontFamily: {
-        sans: ['Outfit', 'Inter', 'sans-serif'],
+        sans: ['Outfit', 'Poppins', 'Inter', 'sans-serif'],
       },
       boxShadow: {
-        'premium': '0 8px 30px rgb(0, 0, 0, 0.12)',
-        'premium-hover': '0 20px 40px rgb(0, 0, 0, 0.18)',
-        'glow': '0 0 20px rgba(255, 90, 54, 0.25)',
+        'premium': '0 10px 40px rgba(0, 0, 0, 0.5)',
+        'premium-hover': '0 25px 50px rgba(0, 0, 0, 0.7)',
+        'glow': '0 0 25px rgba(255, 107, 53, 0.35)',
+        'gold-glow': '0 0 25px rgba(255, 182, 39, 0.25)',
       },
     },
   },

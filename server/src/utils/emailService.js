@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const EMAIL_FROM = process.env.EMAIL_FROM || 'SliceLife <onboarding@resend.dev>';
+const EMAIL_FROM = process.env.EMAIL_FROM || 'Crustiva <onboarding@resend.dev>';
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
 let resendInstance = null;
@@ -95,14 +95,14 @@ const getEmailTemplate = (title, headerText, contentHtml) => `
   <div class="wrapper">
     <div class="container">
       <div class="header">
-        <a class="logo" href="${CLIENT_URL}">🍕 SliceLife</a>
+        <a class="logo" href="${CLIENT_URL}">🍕 Crustiva</a>
       </div>
       <div class="content">
         <div class="title">${headerText}</div>
         ${contentHtml}
       </div>
       <div class="footer">
-        <p>SliceLife Delivery App • Oasis Infobyte Level 3 Internship</p>
+        <p>Crustiva Delivery App • Oasis Infobyte Level 3 Internship</p>
         <p>This is an automated operational notification email.</p>
       </div>
     </div>
@@ -145,7 +145,7 @@ export const sendVerificationEmail = async (email, name, token) => {
   const verifyUrl = `${CLIENT_URL}/verify-email?token=${token}`;
   const html = `
     <p>Hi <strong>${name}</strong>,</p>
-    <p>Thank you for registering at SliceLife! To activate your user profile and enjoy our premium menu selections, please verify your email address by clicking the link below:</p>
+    <p>Thank you for registering at Crustiva! To activate your user profile and enjoy our premium menu selections, please verify your email address by clicking the link below:</p>
     <div style="text-align: center;">
       <a href="${verifyUrl}" class="btn" style="color: #ffffff;">Verify Email Address</a>
     </div>
@@ -156,8 +156,8 @@ export const sendVerificationEmail = async (email, name, token) => {
   
   return await sendEmail({
     to: email,
-    subject: '🍕 Activate Your SliceLife Account — Verification Required',
-    title: 'Welcome to SliceLife!',
+    subject: '🍕 Activate Your Crustiva Account — Verification Required',
+    title: 'Welcome to Crustiva!',
     headerText: 'Confirm Your Email Address',
     html,
   });
@@ -168,7 +168,7 @@ export const sendForgotPasswordEmail = async (email, name, token) => {
   const resetUrl = `${CLIENT_URL}/reset-password?token=${token}`;
   const html = `
     <p>Hi <strong>${name}</strong>,</p>
-    <p>We received a request to reset the password for your SliceLife account. To generate a new password, click the button below:</p>
+    <p>We received a request to reset the password for your Crustiva account. To generate a new password, click the button below:</p>
     <div style="text-align: center;">
       <a href="${resetUrl}" class="btn" style="color: #ffffff;">Reset Account Password</a>
     </div>
@@ -179,7 +179,7 @@ export const sendForgotPasswordEmail = async (email, name, token) => {
 
   return await sendEmail({
     to: email,
-    subject: '🔐 SliceLife Password Reset Request',
+    subject: '🔐 Crustiva Password Reset Request',
     title: 'Password Recovery',
     headerText: 'Reset Your Account Password',
     html,
@@ -267,7 +267,7 @@ export const sendOrderConfirmationEmail = async (email, name, orderId, totalAmou
 
   return await sendEmail({
     to: email,
-    subject: `🍕 SliceLife Order Confirmed! (ID: ${orderId.slice(-6).toUpperCase()})`,
+    subject: `🍕 Crustiva Order Confirmed! (ID: ${orderId.slice(-6).toUpperCase()})`,
     title: 'Thank You For Your Order!',
     headerText: 'We Are Preparing Your Pizza!',
     html,

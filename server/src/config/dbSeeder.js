@@ -99,11 +99,11 @@ export const seedDatabase = async () => {
     }
 
     // 3. Create Default Administrator (for easy intern testing!)
-    const adminEmail = 'admin@slicelife.com';
+    const adminEmail = 'admin@crustiva.com';
     const adminExists = await User.findOne({ email: adminEmail });
     if (!adminExists) {
       const defaultAdmin = new User({
-        name: 'SliceLife Admin',
+        name: 'Crustiva Admin',
         email: adminEmail,
         password: 'adminpassword123',
         role: 'admin',
@@ -113,6 +113,24 @@ export const seedDatabase = async () => {
       console.log('\n========================= [SEED ADMIN REGISTERED] =========================');
       console.log(`Email:    ${adminEmail}`);
       console.log('Password: adminpassword123 (Roles: admin, isVerified: true)');
+      console.log('===========================================================================\n');
+    }
+
+    // 4. Create Default Customer
+    const userEmail = 'user@crustiva.com';
+    const userExists = await User.findOne({ email: userEmail });
+    if (!userExists) {
+      const defaultUser = new User({
+        name: 'Crustiva Customer',
+        email: userEmail,
+        password: 'userpassword123',
+        role: 'customer',
+        isVerified: true,
+      });
+      await defaultUser.save();
+      console.log('\n======================== [SEED CUSTOMER REGISTERED] ========================');
+      console.log(`Email:    ${userEmail}`);
+      console.log('Password: userpassword123 (Roles: customer, isVerified: true)');
       console.log('===========================================================================\n');
     }
   } catch (error) {

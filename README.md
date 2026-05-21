@@ -1,4 +1,4 @@
-# 🍕 SliceLife | Premium Full-Stack MERN Pizza Delivery Application
+# 🍕 Crustiva | Premium Full-Stack MERN Pizza Delivery Application
 
 A professional, production-grade full-stack Pizza Delivery Application built on the **MERN (MongoDB, Express, React, Node.js)** stack. This project serves as a cornerstone implementation for the **Oasis Infobyte Level 3 Developer Internship**.
 
@@ -32,7 +32,7 @@ A professional, production-grade full-stack Pizza Delivery Application built on 
 When the MongoDB connection is established for the first time, our built-in `dbSeeder.js` automatically populates the database with essential stock, gourmet recipes, and a default administrative account.
 
 ### Administrative Login Details:
-* **Admin Email:** `admin@slicelife.com`
+* **Admin Email:** `admin@crustiva.com`
 * **Admin Password:** `adminpassword123`
 
 ### Pre-Seeded Catalog Items:
@@ -238,3 +238,25 @@ If the health check fails to reach the backend:
 1. Double-check that your Express server is actively running on port `5000`.
 2. Review `client/vite.config.js` to ensure the proxy block targets `http://localhost:5000` exactly.
 3. Restart the Vite developer daemon (`Ctrl + C` then `npm run dev`).
+
+---
+
+## 📸 Production UI/UX Walkthrough & Screenshots
+
+Here is a visual showcase of the elite **CRUSTIVA Dark Gourmet Theme** and custom MERN interactive elements in action.
+
+### 1. Immersive Hero Landing & Chef Specials
+A floating glassmorphic hero deck welcomes gourmands with premium Outfit-font typography, smooth Framer Motion CTA animations, and a rich, warm black `#0F0B0A` background.
+
+![Crustiva Home Gourmet Hero](docs/screenshots/crustiva_home_gourmet_verification.webp)
+
+### 2. Premium Recipe & Ingredient Cards
+Hover-active interactive product cards display reviews (`⭐ 4.8`), real-time preparation times, visual veggie/meat pills, and specific ingredient chips.
+
+![Crustiva Gourmet Cards](docs/screenshots/gourmet_cards.png)
+
+### 3. Layered Sourdough Pizza Customizer
+A completely live virtual pizza builder with animated scaling base dough, spring-expanding custom sauces & cheeses, and bounce-bounce coordinates that drop veggies/meats precisely onto random scatter points.
+
+![Interactive Pizza Customizer](docs/screenshots/pizza_customizer.png)
+![Interactive Alfredo Pizza Builder](docs/screenshots/pizza_customizer_alfredo.png)

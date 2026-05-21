@@ -1,6 +1,6 @@
-# 📐 SliceLife Architectural Specification Manual
+# 📐 Crustiva Architectural Specification Manual
 
-This document outlines the software design patterns, architectural choices, data models, and integration protocols chosen for the **SliceLife Premium Pizza Delivery MERN Application**.
+This document outlines the software design patterns, architectural choices, data models, and integration protocols chosen for the **Crustiva Premium Pizza Delivery MERN Application**.
 
 ---
 

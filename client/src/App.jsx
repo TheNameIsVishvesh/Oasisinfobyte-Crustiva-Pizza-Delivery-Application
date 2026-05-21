@@ -69,31 +69,12 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
+          {/* Customer public routes */}
+          <Route path="/" element={<HomeDashboard />} />
+          <Route path="/customizer" element={<PizzaCustomizer />} />
+          <Route path="/cart" element={<CartPage />} />
+          
           {/* Customer Protected routes */}
-          <Route 
-            path="/" 
-            element={
-              <ProtectedRoute>
-                <HomeDashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/customizer" 
-            element={
-              <ProtectedRoute>
-                <PizzaCustomizer />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/cart" 
-            element={
-              <ProtectedRoute>
-                <CartPage />
-              </ProtectedRoute>
-            } 
-          />
           <Route 
             path="/orders" 
             element={
@@ -136,7 +117,7 @@ export default function App() {
 
       {/* Global Footer */}
       <footer class="bg-pizza-dark py-6 text-center text-xs text-white/20 border-t border-white/5">
-        <p>&copy; {new Date().getFullYear()} SliceLife Gourmet Pizzeria. Oasis Infobyte Level 3 Internship.</p>
+        <p>&copy; {new Date().getFullYear()} Crustiva Gourmet Pizzeria. Oasis Infobyte Level 3 Internship.</p>
       </footer>
     </div>
   );

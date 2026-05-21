@@ -1,7 +1,7 @@
 {
-  "name": "slicelife-root",
+  "name": "crustiva-root",
   "version": "1.0.0",
-  "description": "Root workspace runner for the SliceLife Pizza Delivery Application",
+  "description": "Root workspace runner for the Crustiva Pizza Delivery Application",
   "main": "index.js",
   "scripts": {
     "install-all": "npm install --prefix server && npm install --prefix client",
