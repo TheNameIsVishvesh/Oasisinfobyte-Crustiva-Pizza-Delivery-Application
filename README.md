@@ -88,60 +88,55 @@ Pizza Delivery Application/
 
 ## 🛠️ Step-by-Step Initial Setup
 
+The project is structured as an **NPM Root Workspace**. You can install all dependencies and run both frontend and backend daemons concurrently from the root directory with a single command!
+
 ### 1. Verify Prerequisites
-Before initializing the workspace, confirm you have Node.js and Git installed. Run the following in your terminal:
+Before initializing the workspace, confirm you have Node.js (v18+) and npm (v9+) installed:
 ```bash
-# Verify Node (v18+ recommended)
+# Verify Node installation
 node -v
 
-# Verify npm (v9+ recommended)
+# Verify npm installation
 npm -v
-
-# Verify Git
-git --version
 ```
 
 ### 2. Configure Local Environment Files
-Ensure keys are set up correctly. Copy backend placeholders:
+Ensure configurations are set up correctly. Create the backend environmental file:
 ```bash
+# Navigate to the server folder and copy the template
 cd server
 cp .env.example .env
 ```
-Open `server/.env` and update the local connections:
-* `MONGO_URI`: Your MongoDB connection string (defaults to `mongodb://localhost:27017/pizza_db`).
+Open `server/.env` and configure the settings:
+* `MONGO_URI`: MongoDB connection string (defaults to local `mongodb://localhost:27017/pizza_db`).
 * `JWT_SECRET`: Secret key used for signing JWT payloads.
-* `RESEND_API_KEY`: API key for email delivery (or falls back to terminal logs during local testing).
+* `RESEND_API_KEY`: API key for email delivery (falls back to local console logging if left as `re_placeholder`).
+* `RAZORPAY_KEY_ID`: Your public Razorpay Key ID (test mode: `rzp_test_placeholder`).
+* `RAZORPAY_KEY_SECRET`: Your secret Razorpay Key Secret (test mode: `placeholder_secret`).
 
 ### 3. Install Dependencies
-Run the installation scripts in both workspaces:
+From the **root folder** of the project, run:
 ```bash
-# Install frontend packages
-cd client
+# Installs root helper concurrently
 npm install
 
-# Install backend packages
-cd ../server
-npm install
+# Installs dependencies for client and server in one go
+npm run install-all
 ```
 
 ### 4. Start Development Servers
-Start both environments concurrently:
+Start both backend and frontend environments concurrently:
 ```bash
-# Terminal 1: Run the Backend server (listening on port 5000)
-cd server
-npm run dev
-
-# Terminal 2: Run the Frontend client (listening on port 5173)
-cd client
+# Run both servers simultaneously from the root directory
 npm run dev
 ```
 
 ### 5. Verification Check
 Open your browser and navigate to:
-* **Frontend Site:** `http://localhost:5173`
-* **Backend Health Route:** `http://localhost:5173/api/health` (automatically proxied directly to port 5000)
+* **Frontend Client UI:** `http://localhost:5173`
+* **Backend API Health Check:** `http://localhost:5173/api/health` (automatically proxied directly to port 5000)
 
-If the dashboard displays a green **"Successfully Connected"** badge, your environment is correctly configured!
+If the dashboard displays the active catalogs and inventory alerts, your environment is fully operational!
 
 ---
 

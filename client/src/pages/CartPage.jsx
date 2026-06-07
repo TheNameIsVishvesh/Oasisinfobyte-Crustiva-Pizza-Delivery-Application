@@ -63,11 +63,11 @@ export default function CartPage() {
       };
 
       const res = await API.post('/api/orders/create-payment', orderPayload);
-      const { razorpayOrderId, amount, currency } = res.data.data;
+      const { razorpayOrderId, amount, currency, keyId } = res.data.data;
 
       // 3. Configure Razorpay modal configuration settings
       const options = {
-        key: 'rzp_test_placeholder', // Fallback to client standard test mode
+        key: keyId || 'rzp_test_placeholder', // Fallback to client standard test mode
         amount,
         currency,
         name: 'Crustiva Gourmet Pizzeria',
@@ -135,15 +135,15 @@ export default function CartPage() {
 
   if (cart.length === 0) {
     return (
-      <div class="min-h-[80vh] flex flex-col items-center justify-center bg-pizza-dark text-white space-y-6 px-6 text-center">
-        <div class="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center text-white/30 border border-white/5">
-          <ShoppingBag class="w-10 h-10" />
+      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-pizza-dark text-white space-y-6 px-6 text-center">
+        <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center text-white/30 border border-white/5">
+          <ShoppingBag className="w-10 h-10" />
         </div>
-        <div class="space-y-2">
-          <h3 class="text-2xl font-black">Your Cart is Empty</h3>
-          <p class="text-xs text-white/40 max-w-xs mx-auto">Build your custom dough base, slow-cooked sauce, and gourmet cheeses now!</p>
+        <div className="space-y-2">
+          <h3 className="text-2xl font-black">Your Cart is Empty</h3>
+          <p className="text-xs text-white/40 max-w-xs mx-auto">Build your custom dough base, slow-cooked sauce, and gourmet cheeses now!</p>
         </div>
-        <Link to="/" class="px-8 py-3.5 bg-gradient-to-r from-pizza-primary to-pizza-secondary text-white font-bold rounded-xl text-xs hover:shadow-glow transition-all duration-300">
+        <Link to="/" className="px-8 py-3.5 bg-gradient-to-r from-pizza-primary to-pizza-secondary text-white font-bold rounded-xl text-xs hover:shadow-glow transition-all duration-300">
           Open Pizza Catalog
         </Link>
       </div>
@@ -151,94 +151,94 @@ export default function CartPage() {
   }
 
   return (
-    <div class="min-h-screen bg-pizza-dark text-white py-12 px-6 relative overflow-hidden">
-      <div class="absolute -right-24 -top-24 w-96 h-96 bg-pizza-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
-      <div class="absolute -left-24 -bottom-24 w-96 h-96 bg-pizza-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div className="min-h-screen bg-pizza-dark text-white py-12 px-6 relative overflow-hidden">
+      <div className="absolute -right-24 -top-24 w-96 h-96 bg-pizza-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute -left-24 -bottom-24 w-96 h-96 bg-pizza-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-      <div class="max-w-6xl mx-auto space-y-8 z-10 relative">
-        <h2 class="text-3xl font-extrabold tracking-tight">Your Order Checkout</h2>
+      <div className="max-w-6xl mx-auto space-y-8 z-10 relative">
+        <h2 className="text-3xl font-extrabold tracking-tight">Your Order Checkout</h2>
 
         {error && (
-          <div class="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl flex items-start gap-3 text-xs leading-relaxed animate-shake">
-            <AlertTriangle class="w-5 h-5 shrink-0 text-rose-400" />
+          <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl flex items-start gap-3 text-xs leading-relaxed animate-shake">
+            <AlertTriangle className="w-5 h-5 shrink-0 text-rose-400" />
             <div>
-              <span class="font-bold block">Checkout Blocked</span>
+              <span className="font-bold block">Checkout Blocked</span>
               {error}
             </div>
           </div>
         )}
 
         {success && (
-          <div class="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl flex items-start gap-3 text-xs leading-relaxed">
-            <CheckCircle2 class="w-5 h-5 shrink-0 text-emerald-400" />
+          <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl flex items-start gap-3 text-xs leading-relaxed">
+            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-400" />
             <div>
-              <span class="font-bold block">Success</span>
+              <span className="font-bold block">Success</span>
               {success}
             </div>
           </div>
         )}
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left: Cart Items List */}
-          <div class="lg:col-span-7 space-y-6">
-            <div class="glass-dark p-6 rounded-[2rem] border border-white/5 space-y-6">
-              <h3 class="font-bold text-lg border-b border-white/5 pb-4">Itemized Basket</h3>
-              <div class="divide-y divide-white/5">
+          <div className="lg:col-span-7 space-y-6">
+            <div className="glass-dark p-6 rounded-[2rem] border border-white/5 space-y-6">
+              <h3 className="font-bold text-lg border-b border-white/5 pb-4">Itemized Basket</h3>
+              <div className="divide-y divide-white/5">
                 {cart.map((item) => (
-                  <div key={item.cartItemId} class="py-6 flex gap-4 first:pt-0 last:pb-0">
-                    <div class="w-20 h-20 bg-white/5 rounded-2xl border border-white/5 flex items-center justify-center p-3">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="w-12 h-12">
+                  <div key={item.cartItemId} className="py-6 flex gap-4 first:pt-0 last:pb-0">
+                    <div className="w-20 h-20 bg-white/5 rounded-2xl border border-white/5 flex items-center justify-center p-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" className="w-12 h-12">
                         <path d="M 50 85 A 35 35 0 0 1 19.14 32.5 L 50 15 Z" fill="#FFB74D" />
                         <path d="M 50 80 A 30 30 0 0 1 23.64 35 L 50 20 Z" fill="#FFD54F" />
                       </svg>
                     </div>
 
-                    <div class="flex-1 space-y-2">
-                      <div class="flex justify-between items-start">
+                    <div className="flex-1 space-y-2">
+                      <div className="flex justify-between items-start">
                         <div>
-                          <h4 class="font-bold text-base">{item.name}</h4>
-                          <span class="text-xs text-pizza-primary bg-pizza-primary/10 border border-pizza-primary/20 px-2 py-0.5 rounded-full inline-block mt-1 font-bold">
+                          <h4 className="font-bold text-base">{item.name}</h4>
+                          <span className="text-xs text-pizza-primary bg-pizza-primary/10 border border-pizza-primary/20 px-2 py-0.5 rounded-full inline-block mt-1 font-bold">
                             Size: {item.size}
                           </span>
                         </div>
                         <button 
                           onClick={() => removeFromCart(item.cartItemId)}
-                          class="text-white/40 hover:text-rose-500 transition-colors p-1.5 hover:bg-white/5 rounded-lg"
+                          className="text-white/40 hover:text-rose-500 transition-colors p-1.5 hover:bg-white/5 rounded-lg"
                         >
-                          <Trash2 class="w-4 h-4" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
 
-                      <div class="bg-white/5 p-3 rounded-xl border border-white/5 text-[11px] leading-relaxed text-white/60 space-y-1">
-                        <p><strong class="text-white/80">Base Dough:</strong> {item.customization.base}</p>
-                        <p><strong class="text-white/80">Sauce Spread:</strong> {item.customization.sauce}</p>
-                        <p><strong class="text-white/80">Cheese Blend:</strong> {item.customization.cheese}</p>
+                      <div className="bg-white/5 p-3 rounded-xl border border-white/5 text-[11px] leading-relaxed text-white/60 space-y-1">
+                        <p><strong className="text-white/80">Base Dough:</strong> {item.customization.base}</p>
+                        <p><strong className="text-white/80">Sauce Spread:</strong> {item.customization.sauce}</p>
+                        <p><strong className="text-white/80">Cheese Blend:</strong> {item.customization.cheese}</p>
                         {item.customization.veggies.length > 0 && (
-                          <p><strong class="text-white/80">Veggies:</strong> {item.customization.veggies.join(', ')}</p>
+                          <p><strong className="text-white/80">Veggies:</strong> {item.customization.veggies.join(', ')}</p>
                         )}
                         {item.customization.meat && item.customization.meat.length > 0 && (
-                          <p><strong class="text-white/80">Meat:</strong> {item.customization.meat.join(', ')}</p>
+                          <p><strong className="text-white/80">Meat:</strong> {item.customization.meat.join(', ')}</p>
                         )}
                       </div>
 
-                      <div class="flex justify-between items-center pt-2">
-                        <div class="flex items-center bg-white/5 border border-white/5 rounded-lg px-1.5 py-0.5">
+                      <div className="flex justify-between items-center pt-2">
+                        <div className="flex items-center bg-white/5 border border-white/5 rounded-lg px-1.5 py-0.5">
                           <button 
                             onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
-                            class="w-6 h-6 flex items-center justify-center font-bold text-white/60 hover:text-white"
+                            className="w-6 h-6 flex items-center justify-center font-bold text-white/60 hover:text-white"
                           >
                             -
                           </button>
-                          <span class="w-6 text-center text-xs font-bold">{item.quantity}</span>
+                          <span className="w-6 text-center text-xs font-bold">{item.quantity}</span>
                           <button 
                             onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
-                            class="w-6 h-6 flex items-center justify-center font-bold text-white/60 hover:text-white"
+                            className="w-6 h-6 flex items-center justify-center font-bold text-white/60 hover:text-white"
                           >
                             +
                           </button>
                         </div>
 
-                        <span class="text-lg font-black text-pizza-accent">₹{item.price * item.quantity}</span>
+                        <span className="text-lg font-black text-pizza-accent">₹{item.price * item.quantity}</span>
                       </div>
                     </div>
                   </div>
@@ -248,29 +248,29 @@ export default function CartPage() {
           </div>
 
           {/* Right: Address Form & Summary or Auth Locked prompt */}
-          <div class="lg:col-span-5 space-y-6">
+          <div className="lg:col-span-5 space-y-6">
             {isAuthenticated ? (
               /* Delivery address details form for signed-in users */
-              <form onSubmit={handleCheckout} class="glass-dark p-6 rounded-[2rem] border border-white/5 space-y-5 shadow-premium">
-                <h3 class="font-bold text-lg border-b border-white/5 pb-4">Delivery & Contact</h3>
+              <form onSubmit={handleCheckout} className="glass-dark p-6 rounded-[2rem] border border-white/5 space-y-5 shadow-premium">
+                <h3 className="font-bold text-lg border-b border-white/5 pb-4">Delivery & Contact</h3>
                 
-                <div class="space-y-1.5">
-                  <label class="text-xs font-semibold text-white/70 tracking-wide uppercase flex items-center gap-1.5">
-                    <MapPin class="w-3.5 h-3.5 text-pizza-primary" />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-white/70 tracking-wide uppercase flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-pizza-primary" />
                     <span>Delivery Address</span>
                   </label>
                   <textarea
                     placeholder="Enter complete house address, building/floor numbers, street details, landmark..."
                     value={deliveryAddress}
                     onChange={(e) => setDeliveryAddress(e.target.value)}
-                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary focus:ring-1 focus:ring-pizza-primary outline-none transition-all duration-300 text-sm placeholder:text-white/20 min-h-24 resize-none"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary focus:ring-1 focus:ring-pizza-primary outline-none transition-all duration-300 text-sm placeholder:text-white/20 min-h-24 resize-none"
                     required
                   ></textarea>
                 </div>
 
-                <div class="space-y-1.5">
-                  <label class="text-xs font-semibold text-white/70 tracking-wide uppercase flex items-center gap-1.5">
-                    <Phone class="w-3.5 h-3.5 text-pizza-primary" />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-white/70 tracking-wide uppercase flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-pizza-primary" />
                     <span>Contact Phone Number</span>
                   </label>
                   <input
@@ -278,41 +278,41 @@ export default function CartPage() {
                     placeholder="10-digit mobile contact number"
                     value={deliveryPhone}
                     onChange={(e) => setDeliveryPhone(e.target.value)}
-                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary focus:ring-1 focus:ring-pizza-primary outline-none transition-all duration-300 text-sm placeholder:text-white/20"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary focus:ring-1 focus:ring-pizza-primary outline-none transition-all duration-300 text-sm placeholder:text-white/20"
                     required
                   />
                 </div>
 
                 {/* Order total math summary */}
-                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3 text-xs">
-                  <div class="flex justify-between">
-                    <span class="text-white/50">Subtotal:</span>
-                    <span class="font-bold">₹{subtotal}</span>
+                <div className="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Subtotal:</span>
+                    <span className="font-bold">₹{subtotal}</span>
                   </div>
-                  <div class="flex justify-between">
-                    <span class="text-white/50">Custom Topping Premium:</span>
-                    <span class="font-bold text-emerald-400">Included</span>
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Custom Topping Premium:</span>
+                    <span className="font-bold text-emerald-400">Included</span>
                   </div>
-                  <div class="flex justify-between">
-                    <span class="text-white/50">Express Delivery Charge:</span>
-                    <span class="font-bold text-emerald-400">FREE</span>
+                  <div className="flex justify-between">
+                    <span className="text-white/50">Express Delivery Charge:</span>
+                    <span className="font-bold text-emerald-400">FREE</span>
                   </div>
-                  <div class="flex justify-between pt-3 border-t border-white/5 text-sm">
-                    <span class="font-bold text-white/80">Grand Total:</span>
-                    <span class="text-xl font-black text-pizza-accent">₹{subtotal}</span>
+                  <div className="flex justify-between pt-3 border-t border-white/5 text-sm">
+                    <span className="font-bold text-white/80">Grand Total:</span>
+                    <span className="text-xl font-black text-pizza-accent">₹{subtotal}</span>
                   </div>
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  class="w-full py-4 bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white font-bold rounded-xl text-sm transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full py-4 bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white font-bold rounded-xl text-sm transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {loading ? (
-                    <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   ) : (
                     <>
-                      <CreditCard class="w-4 h-4" />
+                      <CreditCard className="w-4 h-4" />
                       <span>Proceed to Razorpay (Test Mode)</span>
                     </>
                   )}
@@ -320,7 +320,7 @@ export default function CartPage() {
               </form>
             ) : (
               /* Gorgeous, premium auth locked screen for guest users */
-              <div class="glass-dark p-6 rounded-[2rem] border border-white/5 space-y-6 shadow-premium relative overflow-hidden">
+              <div className="glass-dark p-6 rounded-[2rem] border border-white/5 space-y-6 shadow-premium relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-pizza-primary/10 rounded-full blur-2xl pointer-events-none" />
                 
                 <div className="flex items-center gap-3 border-b border-white/5 pb-4">
@@ -357,10 +357,10 @@ export default function CartPage() {
                 </div>
 
                 {/* Basket pricing summary visible to guest */}
-                <div class="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3 text-xs">
-                  <div class="flex justify-between pt-1 text-sm">
-                    <span class="font-bold text-white/80">Grand Total:</span>
-                    <span class="text-xl font-black text-pizza-gold">₹{subtotal}</span>
+                <div className="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3 text-xs">
+                  <div className="flex justify-between pt-1 text-sm">
+                    <span className="font-bold text-white/80">Grand Total:</span>
+                    <span className="text-xl font-black text-pizza-gold">₹{subtotal}</span>
                   </div>
                 </div>
 

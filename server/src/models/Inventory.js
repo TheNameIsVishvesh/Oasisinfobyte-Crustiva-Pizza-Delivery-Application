@@ -12,6 +12,7 @@ const inventorySchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please provide an ingredient category'],
       enum: ['base', 'sauce', 'cheese', 'veggies', 'meat'],
+      index: true,
     },
     stock: {
       type: Number,

@@ -15,14 +15,14 @@
 
 @layer utilities {
   .glass-card {
-    background: rgba(26, 18, 15, 0.7);
+    background: rgba(30, 21, 18, 0.7);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 107, 53, 0.1);
+    border: 1px solid rgba(255, 122, 24, 0.1);
   }
   
   .glass-dark {
-    background: rgba(15, 11, 10, 0.8);
+    background: rgba(22, 16, 13, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.04);

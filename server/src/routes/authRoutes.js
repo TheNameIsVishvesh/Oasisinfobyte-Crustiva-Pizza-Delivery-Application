@@ -6,8 +6,10 @@ import {
   forgotPassword,
   resetPassword,
   getMe,
+  getAllUsers,
+  deleteUser,
 } from '../controllers/authController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { protect, authorize } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -18,7 +20,11 @@ router.post('/login', loginUser);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
 
-// Protected routes
+// Protected customer routes
 router.get('/me', protect, getMe);
+
+// Admin-only endpoints
+router.get('/users', protect, authorize('admin'), getAllUsers);
+router.delete('/users/:id', protect, authorize('admin'), deleteUser);
 
 export default router;

@@ -94,6 +94,7 @@ export const createPaymentOrder = async (req, res) => {
         amount: rpOrder.amount,
         currency: rpOrder.currency,
         calculatedTotal,
+        keyId: process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder',
       },
     });
   } catch (error) {

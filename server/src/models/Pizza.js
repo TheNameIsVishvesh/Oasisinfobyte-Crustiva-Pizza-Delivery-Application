@@ -21,6 +21,7 @@ const pizzaSchema = new mongoose.Schema(
       type: String,
       enum: ['veg', 'non-veg', 'gourmet'],
       default: 'veg',
+      index: true,
     },
     image: {
       type: String,
@@ -33,6 +34,7 @@ const pizzaSchema = new mongoose.Schema(
     isAvailable: {
       type: Boolean,
       default: true,
+      index: true,
     },
   },
   {

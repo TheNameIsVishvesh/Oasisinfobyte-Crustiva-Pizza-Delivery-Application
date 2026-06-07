@@ -234,3 +234,32 @@ export const getMe = async (req, res) => {
     res.status(500).json({ status: 'error', message: error.message || 'Server error fetching user profile' });
   }
 };
+
+// @desc    Admin: Get all users
+// @route   GET /api/auth/users
+// @access  Private/Admin
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).sort({ createdAt: -1 });
+    res.status(200).json({ status: 'success', data: users });
+  } catch (error) {
+    console.error('❌ Get Users Error:', error);
+    res.status(500).json({ status: 'error', message: 'Failed to retrieve system users log' });
+  }
+};
+
+// @desc    Admin: Delete user
+// @route   DELETE /api/auth/users/:id
+// @access  Private/Admin
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) {
+      return res.status(404).json({ status: 'error', message: 'User record not found' });
+    }
+    res.status(200).json({ status: 'success', message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('❌ Delete User Error:', error);
+    res.status(500).json({ status: 'error', message: 'Failed to delete user' });
+  }
+};

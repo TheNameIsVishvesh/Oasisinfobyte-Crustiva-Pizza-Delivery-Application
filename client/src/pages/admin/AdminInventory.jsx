@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import API from '../../services/api';
-import { ShieldAlert, Plus, Edit2, Trash2, ArrowUpRight, RotateCcw, AlertTriangle } from 'lucide-react';
+import { BellRing, Plus, Edit2, Trash2, ArrowUpRight, RotateCcw, AlertTriangle } from 'lucide-react';
 
 export default function AdminInventory() {
   const [items, setItems] = useState([]);
@@ -107,56 +107,56 @@ export default function AdminInventory() {
   };
 
   return (
-    <div class="min-h-screen bg-pizza-dark text-white py-12 px-6 relative overflow-hidden">
-      <div class="absolute -right-24 -top-24 w-96 h-96 bg-pizza-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
-      <div class="absolute -left-24 -bottom-24 w-96 h-96 bg-pizza-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div className="min-h-screen bg-pizza-dark text-white py-12 px-6 relative overflow-hidden">
+      <div className="absolute -right-24 -top-24 w-96 h-96 bg-pizza-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute -left-24 -bottom-24 w-96 h-96 bg-pizza-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-      <div class="max-w-7xl mx-auto space-y-8 z-10 relative">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="max-w-7xl mx-auto space-y-8 z-10 relative">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h2 class="text-3xl font-extrabold tracking-tight">Ingredient Inventory</h2>
-            <p class="text-xs text-white/50 mt-1">Manage active stock thresholds, customizer options, and prices</p>
+            <h2 className="text-3xl font-extrabold tracking-tight">Ingredient Inventory</h2>
+            <p className="text-xs text-white/50 mt-1">Manage active stock thresholds, customizer options, and prices</p>
           </div>
 
           <button
             onClick={() => setShowAddForm(!showAddForm)}
-            class="px-4 py-2.5 bg-pizza-primary hover:bg-pizza-primary/95 text-white font-bold rounded-xl text-xs hover:shadow-glow transition-all flex items-center gap-1.5"
+            className="px-4 py-2.5 bg-pizza-primary hover:bg-pizza-primary/95 text-white font-bold rounded-xl text-xs hover:shadow-glow transition-all flex items-center gap-1.5"
           >
-            <Plus class="w-4 h-4" />
+            <Plus className="w-4 h-4" />
             <span>Add New Topping</span>
           </button>
         </div>
 
         {error && (
-          <div class="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl flex items-center gap-3 text-xs">
-            <AlertTriangle class="w-5 h-5 shrink-0" />
+          <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl flex items-center gap-3 text-xs">
+            <AlertTriangle className="w-5 h-5 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {/* Form Overlay: Add Ingredient */}
         {showAddForm && (
-          <form onSubmit={handleAddIngredient} class="glass-dark p-6 rounded-3xl border border-pizza-primary/20 space-y-4 max-w-2xl animate-slideDown">
-            <h3 class="font-bold text-base text-pizza-primary">Register New Ingredient</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-white/60 uppercase">Ingredient Name</label>
+          <form onSubmit={handleAddIngredient} className="glass-dark p-6 rounded-3xl border border-pizza-primary/20 space-y-4 max-w-2xl animate-slideDown">
+            <h3 className="font-bold text-base text-pizza-primary">Register New Ingredient</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-white/60 uppercase">Ingredient Name</label>
                 <input
                   type="text"
                   placeholder="e.g. Sliced Mushrooms"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
                   required
                 />
               </div>
 
-              <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-white/60 uppercase">Category</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-white/60 uppercase">Category</label>
                 <select
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
-                  class="w-full px-3 py-2 bg-[#2c2520] border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs text-white"
+                  className="w-full px-3 py-2 bg-[#2c2520] border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs text-white"
                 >
                   <option value="base">Base Dough</option>
                   <option value="sauce">Pizza Sauce</option>
@@ -166,44 +166,44 @@ export default function AdminInventory() {
                 </select>
               </div>
 
-              <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-white/60 uppercase">Stock Level (Units)</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-white/60 uppercase">Stock Level (Units)</label>
                 <input
                   type="number"
                   value={newStock}
                   onChange={(e) => setNewStock(parseInt(e.target.value))}
-                  class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
                   required
                 />
               </div>
 
-              <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-white/60 uppercase">Warning Threshold</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-white/60 uppercase">Warning Threshold</label>
                 <input
                   type="number"
                   value={newThreshold}
                   onChange={(e) => setNewThreshold(parseInt(e.target.value))}
-                  class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
                   required
                 />
               </div>
 
-              <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-white/60 uppercase">Topping Price Addition (₹)</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-white/60 uppercase">Topping Price Addition (₹)</label>
                 <input
                   type="number"
                   value={newPrice}
                   onChange={(e) => setNewPrice(parseInt(e.target.value))}
-                  class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
                   required
                 />
               </div>
 
-              <div class="flex items-end gap-2">
-                <button type="submit" class="flex-1 px-4 py-2.5 bg-pizza-primary text-white font-bold rounded-xl text-xs">
+              <div className="flex items-end gap-2">
+                <button type="submit" className="flex-1 px-4 py-2.5 bg-pizza-primary text-white font-bold rounded-xl text-xs">
                   Save
                 </button>
-                <button type="button" onClick={() => setShowAddForm(false)} class="px-4 py-2.5 bg-white/5 rounded-xl text-xs text-white/60">
+                <button type="button" onClick={() => setShowAddForm(false)} className="px-4 py-2.5 bg-white/5 rounded-xl text-xs text-white/60">
                   Cancel
                 </button>
               </div>
@@ -213,47 +213,47 @@ export default function AdminInventory() {
 
         {/* Form Modal: Edit Ingredient overlay */}
         {editingItem && (
-          <form onSubmit={handleSaveEdit} class="glass-dark p-6 rounded-3xl border border-pizza-accent/20 space-y-4 max-w-2xl animate-scaleUp">
-            <h3 class="font-bold text-base text-pizza-accent">Edit Ingredient: {editingItem.name}</h3>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-white/60 uppercase">Stock Level (Units)</label>
+          <form onSubmit={handleSaveEdit} className="glass-dark p-6 rounded-3xl border border-pizza-accent/20 space-y-4 max-w-2xl animate-scaleUp">
+            <h3 className="font-bold text-base text-pizza-accent">Edit Ingredient: {editingItem.name}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-white/60 uppercase">Stock Level (Units)</label>
                 <input
                   type="number"
                   value={editStock}
                   onChange={(e) => setEditStock(parseInt(e.target.value))}
-                  class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
                   required
                 />
               </div>
 
-              <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-white/60 uppercase">Warning Threshold</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-white/60 uppercase">Warning Threshold</label>
                 <input
                   type="number"
                   value={editThreshold}
                   onChange={(e) => setEditThreshold(parseInt(e.target.value))}
-                  class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
                   required
                 />
               </div>
 
-              <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-white/60 uppercase">Topping Price Addition (₹)</label>
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-white/60 uppercase">Topping Price Addition (₹)</label>
                 <input
                   type="number"
                   value={editPrice}
                   onChange={(e) => setEditPrice(parseInt(e.target.value))}
-                  class="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-xl focus:border-pizza-primary outline-none transition-all text-xs"
                   required
                 />
               </div>
 
-              <div class="flex items-end gap-2">
-                <button type="submit" class="flex-1 px-4 py-2.5 bg-pizza-accent text-pizza-dark font-black rounded-xl text-xs">
+              <div className="flex items-end gap-2">
+                <button type="submit" className="flex-1 px-4 py-2.5 bg-pizza-accent text-pizza-dark font-black rounded-xl text-xs">
                   Apply
                 </button>
-                <button type="button" onClick={() => setEditingItem(null)} class="px-4 py-2.5 bg-white/5 rounded-xl text-xs text-white/60">
+                <button type="button" onClick={() => setEditingItem(null)} className="px-4 py-2.5 bg-white/5 rounded-xl text-xs text-white/60">
                   Cancel
                 </button>
               </div>
@@ -263,61 +263,61 @@ export default function AdminInventory() {
 
         {/* Tabular stock listing */}
         {loading ? (
-          <div class="text-center py-20">
-            <div class="w-10 h-10 border-4 border-pizza-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <div className="text-center py-20">
+            <div className="w-10 h-10 border-4 border-pizza-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
           </div>
         ) : items.length === 0 ? (
-          <p class="text-center py-10 text-white/40 text-xs">No ingredients registered.</p>
+          <p className="text-center py-10 text-white/40 text-xs">No ingredients registered.</p>
         ) : (
-          <div class="glass-dark rounded-[2rem] border border-white/5 overflow-hidden shadow-premium">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
+          <div className="glass-dark rounded-[2rem] border border-white/5 overflow-hidden shadow-premium">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr class="bg-white/5 text-[10px] uppercase font-bold tracking-wider text-white/50 border-b border-white/5">
-                    <th class="py-4 px-6">Ingredient Name</th>
-                    <th class="py-4 px-6">Category</th>
-                    <th class="py-4 px-6">Active Stock</th>
-                    <th class="py-4 px-6">Safety Threshold</th>
-                    <th class="py-4 px-6">Topping Price</th>
-                    <th class="py-4 px-6">Status Alerts</th>
-                    <th class="py-4 px-6 text-center">Actions</th>
+                  <tr className="bg-white/5 text-[10px] uppercase font-bold tracking-wider text-white/50 border-b border-white/5">
+                    <th className="py-4 px-6">Ingredient Name</th>
+                    <th className="py-4 px-6">Category</th>
+                    <th className="py-4 px-6">Active Stock</th>
+                    <th className="py-4 px-6">Safety Threshold</th>
+                    <th className="py-4 px-6">Topping Price</th>
+                    <th className="py-4 px-6">Status Alerts</th>
+                    <th className="py-4 px-6 text-center">Actions</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-white/5 text-xs text-white/80">
+                <tbody className="divide-y divide-white/5 text-xs text-white/80">
                   {items.map((item) => {
                     const isLowStock = item.stock <= item.threshold;
                     return (
                       <tr key={item._id} class={`hover:bg-white/5 transition-colors ${isLowStock ? 'bg-rose-500/5' : ''}`}>
-                        <td class="py-4 px-6 font-extrabold text-white">{item.name}</td>
-                        <td class="py-4 px-6 uppercase tracking-wider text-[10px] text-white/40">{item.category}</td>
-                        <td class="py-4 px-6 font-mono font-bold">{item.stock} units</td>
-                        <td class="py-4 px-6 font-mono text-white/40">{item.threshold} units</td>
-                        <td class="py-4 px-6 font-extrabold text-pizza-accent">₹{item.unitPrice}</td>
-                        <td class="py-4 px-6">
+                        <td className="py-4 px-6 font-extrabold text-white">{item.name}</td>
+                        <td className="py-4 px-6 uppercase tracking-wider text-[10px] text-white/40">{item.category}</td>
+                        <td className="py-4 px-6 font-mono font-bold">{item.stock} units</td>
+                        <td className="py-4 px-6 font-mono text-white/40">{item.threshold} units</td>
+                        <td className="py-4 px-6 font-extrabold text-pizza-accent">₹{item.unitPrice}</td>
+                        <td className="py-4 px-6">
                           {isLowStock ? (
-                            <span class="inline-flex items-center gap-1 text-[10px] uppercase font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2.5 py-0.5 rounded-full animate-pulse">
-                              <ShieldAlert class="w-3 h-3" />
+                            <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2.5 py-0.5 rounded-full animate-pulse">
+                              <BellRing className="w-3 h-3" />
                               <span>Low Stock Warning</span>
                             </span>
                           ) : (
-                            <span class="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
+                            <span className="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
                               Fully Primed
                             </span>
                           )}
                         </td>
-                        <td class="py-4 px-6 text-center">
-                          <div class="flex justify-center gap-2">
+                        <td className="py-4 px-6 text-center">
+                          <div className="flex justify-center gap-2">
                             <button
                               onClick={() => handleStartEdit(item)}
-                              class="p-1.5 bg-white/5 border border-white/10 rounded-lg hover:text-pizza-accent transition-colors"
+                              className="p-1.5 bg-white/5 border border-white/10 rounded-lg hover:text-pizza-accent transition-colors"
                             >
-                              <Edit2 class="w-3.5 h-3.5" />
+                              <Edit2 className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleDeleteItem(item._id)}
-                              class="p-1.5 bg-white/5 border border-white/10 rounded-lg hover:text-rose-500 transition-colors"
+                              className="p-1.5 bg-white/5 border border-white/10 rounded-lg hover:text-rose-500 transition-colors"
                             >
-                              <Trash2 class="w-3.5 h-3.5" />
+                              <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </td>

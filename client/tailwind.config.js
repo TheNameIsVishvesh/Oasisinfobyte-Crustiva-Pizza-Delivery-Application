@@ -8,16 +8,22 @@ export default {
     extend: {
       colors: {
         pizza: {
-          primary: '#FF6B35',      // Premium orange
-          secondary: '#FF4D4D',    // Tomato red
-          dark: '#0F0B0A',         // Deep warm black
-          espresso: '#1A120F',     // Rich espresso brown
-          charcoal: '#241816',     // Soft charcoal
-          gold: '#FFB627',         // Melted cheese gold
+          primary: '#FF7A18',      // Premium orange
+          secondary: '#FFB347',    // Warm secondary
+          dark: '#0F0B0A',         // Background
+          surface: '#16100D',      // Surface
+          card: '#1E1512',         // Card
+          highlight: '#FFD27F',    // Highlight
+          light: '#FFFFFF',        // Text white
+          muted: '#B8B8B8',        // Muted
+          
+          // Alias mappings to preserve compatibility with existing classes
+          espresso: '#16100D',     // Maps to Surface
+          charcoal: '#1E1512',     // Maps to Card
+          gold: '#FFD27F',         // Maps to Highlight
+          gray: '#B8B8B8',         // Maps to Muted
+          subtle: '#8C8C8C',       
           basil: '#35C26B',        // Basil green
-          light: '#F8F5F2',        // Soft white
-          gray: '#B8ACA3',         // Warm gray
-          subtle: '#7A6E67',       // Muted subtle
         }
       },
       fontFamily: {

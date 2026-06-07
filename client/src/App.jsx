@@ -22,6 +22,7 @@ import OrdersPage from './pages/OrdersPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminInventory from './pages/admin/AdminInventory';
 import AdminOrders from './pages/admin/AdminOrders';
+import AdminUsers from './pages/admin/AdminUsers';
 
 // Guard: Customer Protected Route
 const ProtectedRoute = ({ children }) => {
@@ -29,8 +30,8 @@ const ProtectedRoute = ({ children }) => {
   
   if (loading) {
     return (
-      <div class="min-h-screen flex items-center justify-center bg-pizza-dark text-white">
-        <div class="w-12 h-12 border-4 border-pizza-primary border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center bg-pizza-dark text-white">
+        <div className="w-12 h-12 border-4 border-pizza-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -44,8 +45,8 @@ const AdminRoute = ({ children }) => {
   
   if (loading) {
     return (
-      <div class="min-h-screen flex items-center justify-center bg-pizza-dark text-white">
-        <div class="w-12 h-12 border-4 border-pizza-primary border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen flex items-center justify-center bg-pizza-dark text-white">
+        <div className="w-12 h-12 border-4 border-pizza-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -55,12 +56,12 @@ const AdminRoute = ({ children }) => {
 
 export default function App() {
   return (
-    <div class="min-h-screen bg-pizza-dark text-white font-sans flex flex-col">
+    <div className="min-h-screen bg-pizza-dark text-white font-sans flex flex-col">
       {/* Global Navigation Header */}
       <Navbar />
 
       {/* Primary Routes Layout */}
-      <main class="flex-1">
+      <main className="flex-1">
         <Routes>
           {/* Public Auth routes */}
           <Route path="/login" element={<Login />} />
@@ -109,6 +110,14 @@ export default function App() {
               </AdminRoute>
             } 
           />
+          <Route 
+            path="/admin/users" 
+            element={
+              <AdminRoute>
+                <AdminUsers />
+              </AdminRoute>
+            } 
+          />
 
           {/* Catch-all fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
@@ -116,7 +125,7 @@ export default function App() {
       </main>
 
       {/* Global Footer */}
-      <footer class="bg-pizza-dark py-6 text-center text-xs text-white/20 border-t border-white/5">
+      <footer className="bg-pizza-dark py-6 text-center text-xs text-white/20 border-t border-white/5">
         <p>&copy; {new Date().getFullYear()} Crustiva Gourmet Pizzeria. Oasis Infobyte Level 3 Internship.</p>
       </footer>
     </div>
