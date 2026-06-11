@@ -378,7 +378,7 @@ const VisualPizzaDeck = ({
                 animate={{ opacity: 1, y: pos.y, x: pos.x, scale: 1, rotate: pos.rotate }}
                 exit={{ opacity: 0, scale: 0, y: 150, rotate: 180, transition: { duration: 0.45 } }}
                 transition={{ type: "spring", stiffness: 140, damping: 11.5, delay: idx * 0.015 }}
-                className="absolute z-35 pointer-events-none"
+                className="absolute z-[35] pointer-events-none"
               >
                 <ToppingIcon name={meatName} />
               </motion.div>
