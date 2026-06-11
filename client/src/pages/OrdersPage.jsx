@@ -74,7 +74,7 @@ export default function OrdersPage() {
             disabled={refreshing}
             className="p-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors flex items-center gap-2 text-xs"
           >
-            <RefreshCw class={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
           </button>
         </div>
@@ -146,7 +146,7 @@ export default function OrdersPage() {
                         return (
                           <div key={idx} className="relative z-10 flex flex-col items-center">
                             <div 
-                              class={`w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-500 ${
+                              className={`w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-500 ${
                                 isPast 
                                   ? 'bg-pizza-primary border-pizza-primary text-white shadow-glow' 
                                   : isCurrent 
@@ -157,7 +157,7 @@ export default function OrdersPage() {
                               <StepIcon className="w-5 h-5" />
                             </div>
                             <span 
-                              class={`text-[10px] uppercase tracking-wider font-extrabold mt-2.5 hidden sm:block ${
+                              className={`text-[10px] uppercase tracking-wider font-extrabold mt-2.5 hidden sm:block ${
                                 isCurrent ? 'text-pizza-accent font-black' : isPast ? 'text-white/80' : 'text-white/30'
                               }`}
                             >
