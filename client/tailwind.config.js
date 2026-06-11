@@ -35,6 +35,10 @@ export default {
         'glow': '0 0 25px rgba(255, 107, 53, 0.35)',
         'gold-glow': '0 0 25px rgba(255, 182, 39, 0.25)',
       },
+      spacing: {
+        '3.5': '0.875rem', // 14px
+        '4.5': '1.125rem', // 18px
+      },
     },
   },
   plugins: [],

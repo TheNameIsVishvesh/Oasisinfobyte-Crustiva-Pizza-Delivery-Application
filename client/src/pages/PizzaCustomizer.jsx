@@ -356,7 +356,7 @@ const VisualPizzaDeck = ({
               <motion.div
                 key={`${vegName}_${idx}`}
                 initial={{ opacity: 0, y: -220, scale: 0, rotate: -45 }}
-                animate={{ opacity: 1, y: pos.y * 1.3, x: pos.x * 1.3, scale: 1, rotate: pos.rotate }}
+                animate={{ opacity: 1, y: pos.y, x: pos.x, scale: 1, rotate: pos.rotate }}
                 exit={{ opacity: 0, scale: 0, y: 150, rotate: 180, transition: { duration: 0.45 } }}
                 transition={{ type: "spring", stiffness: 140, damping: 11.5, delay: idx * 0.015 }}
                 className="absolute z-30 pointer-events-none"
@@ -375,7 +375,7 @@ const VisualPizzaDeck = ({
               <motion.div
                 key={`${meatName}_${idx}`}
                 initial={{ opacity: 0, y: -220, scale: 0, rotate: -45 }}
-                animate={{ opacity: 1, y: pos.y * 1.3, x: pos.x * 1.3, scale: 1, rotate: pos.rotate }}
+                animate={{ opacity: 1, y: pos.y, x: pos.x, scale: 1, rotate: pos.rotate }}
                 exit={{ opacity: 0, scale: 0, y: 150, rotate: 180, transition: { duration: 0.45 } }}
                 transition={{ type: "spring", stiffness: 140, damping: 11.5, delay: idx * 0.015 }}
                 className="absolute z-35 pointer-events-none"
