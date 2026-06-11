@@ -15,8 +15,9 @@ export const CartProvider = ({ children }) => {
 
   // Add Item to Cart
   const addToCart = (pizza, customization, size = 'Medium', quantity = 1) => {
+    const isCustomized = pizza.isCustomized === true;
     // Generate a unique identifier for this customized unit configuration
-    const cartItemId = `${pizza._id}_${size}_${customization.base}_${customization.sauce}_${customization.cheese}_${(customization.veggies || []).join('-')}_${(customization.meat || []).join('-')}`;
+    const cartItemId = `${pizza._id}_${size}_${customization.base}_${customization.sauce}_${customization.cheese}_${(customization.veggies || []).join('-')}_${(customization.meat || []).join('-')}_${isCustomized ? 'custom' : 'original'}`;
 
     setCart((prevCart) => {
       const existingItemIndex = prevCart.findIndex((item) => item.cartItemId === cartItemId);
@@ -35,11 +36,12 @@ export const CartProvider = ({ children }) => {
             pizzaId: pizza._id,
             name: pizza.name,
             description: pizza.description,
-            price: pizza.price, // baseline catalog price
+            price: pizza.price, // baseline catalog price or overridden custom price
             category: pizza.category,
             image: pizza.image,
             size,
             quantity,
+            isCustomized,
             customization: {
               base: customization.base,
               sauce: customization.sauce,

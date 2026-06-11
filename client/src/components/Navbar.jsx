@@ -56,24 +56,26 @@ export default function Navbar() {
             )}
           </Link>
 
-          {isAuthenticated ? (
+          {isAuthenticated || isAdmin ? (
             <>
               {/* Order History */}
-              <Link 
-                to="/orders" 
-                className={`text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 py-1 ${
-                  currentPath === '/orders' ? 'text-pizza-primary' : 'text-pizza-gray hover:text-white'
-                }`}
-              >
-                <History className="w-4 h-4 text-pizza-gold" />
-                <span className="hidden md:inline">Track Orders</span>
-                {currentPath === '/orders' && (
-                  <motion.div 
-                    layoutId="nav-underline" 
-                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-pizza-primary rounded-full shadow-glow"
-                  />
-                )}
-              </Link>
+              {isAuthenticated && (
+                <Link 
+                  to="/orders" 
+                  className={`text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-1.5 py-1 ${
+                    currentPath === '/orders' ? 'text-pizza-primary' : 'text-pizza-gray hover:text-white'
+                  }`}
+                >
+                  <History className="w-4 h-4 text-pizza-gold" />
+                  <span className="hidden md:inline">Track Orders</span>
+                  {currentPath === '/orders' && (
+                    <motion.div 
+                      layoutId="nav-underline" 
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-pizza-primary rounded-full shadow-glow"
+                    />
+                  )}
+                </Link>
+              )}
 
               {/* Admin Panel Link */}
               {isAdmin && (
@@ -95,26 +97,28 @@ export default function Navbar() {
               )}
 
               {/* Shopping Cart Link */}
-              <Link 
-                to="/cart" 
-                className={`relative p-2.5 bg-pizza-charcoal rounded-xl border border-white/10 hover:border-pizza-primary/30 transition-all duration-300 ${
-                  currentPath === '/cart' ? 'bg-pizza-primary/10 border-pizza-primary' : ''
-                }`}
-              >
-                <ShoppingCart className="w-4.5 h-4.5 text-white/90" />
-                <AnimatePresence>
-                  {cartCount > 0 && (
-                    <motion.span 
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      className="absolute -top-1.5 -right-1.5 bg-pizza-primary text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-glow"
-                    >
-                      {cartCount}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </Link>
+              {isAuthenticated && (
+                <Link 
+                  to="/cart" 
+                  className={`relative p-2.5 bg-pizza-charcoal rounded-xl border border-white/10 hover:border-pizza-primary/30 transition-all duration-300 ${
+                    currentPath === '/cart' ? 'bg-pizza-primary/10 border-pizza-primary' : ''
+                  }`}
+                >
+                  <ShoppingCart className="w-4.5 h-4.5 text-white/90" />
+                  <AnimatePresence>
+                    {cartCount > 0 && (
+                      <motion.span 
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        className="absolute -top-1.5 -right-1.5 bg-pizza-primary text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-glow"
+                      >
+                        {cartCount}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </Link>
+              )}
 
               {/* User Dropdown */}
               <div className="relative pl-4 border-l border-white/10">
@@ -126,7 +130,9 @@ export default function Navbar() {
                     {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                   </div>
                   <div className="hidden lg:block text-xs">
-                    <span className="block text-[9px] text-pizza-subtle uppercase font-semibold">User</span>
+                    <span className="block text-[9px] text-pizza-subtle uppercase font-semibold">
+                      {currentPath.startsWith('/admin') ? 'Admin' : 'User'}
+                    </span>
                     <span className="font-bold text-pizza-light flex items-center gap-0.5">
                       {user?.name}
                       <ChevronDown className="w-3 h-3 text-pizza-gold" />
@@ -155,7 +161,7 @@ export default function Navbar() {
                           className="w-full text-left px-4 py-2.5 text-xs text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 transition-colors font-bold"
                         >
                           <LogOut className="w-4 h-4" />
-                          <span>Logout</span>
+                          <span>Logout {currentPath.startsWith('/admin') ? 'Admin' : ''}</span>
                         </button>
                       </motion.div>
                     </>

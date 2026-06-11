@@ -1,7 +1,5 @@
 import express from 'express';
 import {
-  createPaymentOrder,
-  verifyPaymentAndCreateOrder,
   getMyOrders,
   getOrderById,
   getAllOrders,
@@ -14,8 +12,6 @@ const router = express.Router();
 // Access restrictions to authenticated profiles
 router.use(protect);
 
-router.post('/create-payment', createPaymentOrder);
-router.post('/verify-payment', verifyPaymentAndCreateOrder);
 router.get('/my-orders', getMyOrders);
 router.get('/:id', getOrderById);
 

@@ -57,23 +57,22 @@ export default function CartPage() {
 
       // 2. Request backend to create transaction order and perform ingredient safety checks
       const orderPayload = {
+        amount: getCartTotal(),
         items: cart,
-        deliveryAddress,
-        deliveryPhone,
       };
 
-      const res = await API.post('/api/orders/create-payment', orderPayload);
-      const { razorpayOrderId, amount, currency, keyId } = res.data.data;
+      const res = await API.post('/api/payments/create-order', orderPayload);
+      const { order_id, amount, currency, keyId } = res.data.data;
 
       // 3. Configure Razorpay modal configuration settings
       const options = {
-        key: keyId || 'rzp_test_placeholder', // Fallback to client standard test mode
+        key: keyId || 'rzp_test_Sykxiyt7GHDV0v', // Fallback to provided test key
         amount,
         currency,
-        name: 'Crustiva Gourmet Pizzeria',
-        description: `Order checkout for ${user?.name || 'Customer'}`,
+        name: 'CRUSTIVA',
+        description: 'Premium Pizza Order',
         image: '/src/assets/pizza-logo.svg',
-        order_id: razorpayOrderId,
+        order_id: order_id,
         prefill: {
           name: user?.name || '',
           email: user?.email || '',
@@ -83,24 +82,24 @@ export default function CartPage() {
           address: deliveryAddress,
         },
         theme: {
-          color: '#FF6B35', // Brand color matching Crustiva premium orange
+          color: '#FF7A18', // Brand color matching Crustiva premium orange
         },
         handler: async (response) => {
           setLoading(true);
           try {
             // 4. Submit verification signature payload to backend
             const verifyPayload = {
-              razorpayOrderId: response.razorpay_order_id,
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpaySignature: response.razorpay_signature,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
               items: cart,
               deliveryAddress,
               deliveryPhone,
             };
 
-            const verificationRes = await API.post('/api/orders/verify-payment', verifyPayload);
+            const verificationRes = await API.post('/api/payments/verify', verifyPayload);
             
-            setSuccess('Payment verified successfully! Creating order...');
+            setSuccess('Payment Successful');
             clearCart();
             
             // Navigate directly to live orders status screen

@@ -3,10 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import CrustSvg from '../assets/pizza/CrustSvg';
+import CheeseLayer from '../assets/pizza/CheeseLayer';
+import ToppingIcon, { veggieScatter, meatScatter } from '../assets/pizza/ToppingIcon';
+
+// High-fidelity pizza PNG images
+import margheritaImg from '../assets/margherita.png';
+import pepperoniImg from '../assets/pepperoni.png';
+import veggieImg from '../assets/veggie.png';
+import bbqChickenImg from '../assets/bbq_chicken.png';
+
+// Realistic topping PNG assets for floating animations
+import pepperTopping from '../assets/pizza/meat/spicy-pepperoni.png';
+import mushroomTopping from '../assets/pizza/veggies/sliced-mushrooms.png';
+import onionTopping from '../assets/pizza/veggies/red-onions.png';
+import capsicumTopping from '../assets/pizza/veggies/crisp-capsicum.png';
+
 import { 
   Search, SlidersHorizontal, ShoppingCart, Sparkles, 
   AlertTriangle, Star, Clock, Heart, Award, ArrowRight, 
-  ChefHat, Flame, Leaf, UtensilsCrossed, ShieldCheck 
+  ChefHat, Flame, Leaf, UtensilsCrossed, ShieldCheck,
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -22,6 +39,38 @@ export default function HomeDashboard() {
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  // Testimonials Slider State
+  const reviews = [
+    {
+      stars: 5,
+      text: "The Live Customizer in Crustiva is phenomenal! I could visually add toppings layer by layer and order a personal thin crust cheese burst that arrived blazing hot. Truly elite UI/UX experience!",
+      name: "Ananya Sen",
+      role: "Verified Food Blogger"
+    },
+    {
+      stars: 5,
+      text: "Crustiva has changed the game in pizza delivery. The level of transparency in ingredient stocks, gorgeous microinteractions, and rapid doorstep delivery makes it my absolute go-to startup product!",
+      name: "Vikram Malhotra",
+      role: "Startup Founder"
+    },
+    {
+      stars: 5,
+      text: "Absolutely stunning luxury aesthetic! Ordering pizza feels like selecting a luxury watch. And the taste? Absolutely out of this world, especially the Truffle Pesto Mushroom!",
+      name: "Rohan Mehra",
+      role: "Michelin Guide Reviewer"
+    },
+    {
+      stars: 5,
+      text: "I loved the custom synthesizer sound cues during the customization phase. It makes build-your-own-pizza feel like a high-tech audio-visual instrument!",
+      name: "Elena Rostova",
+      role: "Sound Designer & Chef"
+    }
+  ];
+  const [activeReviewIdx, setActiveReviewIdx] = useState(0);
+
+  // Animated counters state
+  const [stats, setStats] = useState({ crusts: 0, rating: 0.0, speed: 0 });
 
   useEffect(() => {
     const fetchPizzas = async () => {
@@ -39,6 +88,43 @@ export default function HomeDashboard() {
     };
 
     fetchPizzas();
+
+    // Trigger counters animation
+    const crustsInterval = setInterval(() => {
+      setStats(prev => {
+        if (prev.crusts >= 10250) {
+          clearInterval(crustsInterval);
+          return { ...prev, crusts: 10250 };
+        }
+        return { ...prev, crusts: prev.crusts + 250 };
+      });
+    }, 40);
+
+    const ratingInterval = setInterval(() => {
+      setStats(prev => {
+        if (prev.rating >= 4.9) {
+          clearInterval(ratingInterval);
+          return { ...prev, rating: 4.9 };
+        }
+        return { ...prev, rating: parseFloat((prev.rating + 0.1).toFixed(1)) };
+      });
+    }, 30);
+
+    const speedInterval = setInterval(() => {
+      setStats(prev => {
+        if (prev.speed >= 30) {
+          clearInterval(speedInterval);
+          return { ...prev, speed: 30 };
+        }
+        return { ...prev, speed: prev.speed + 1 };
+      });
+    }, 40);
+
+    return () => {
+      clearInterval(crustsInterval);
+      clearInterval(ratingInterval);
+      clearInterval(speedInterval);
+    };
   }, []);
 
   // Toggle favorite helper
@@ -83,6 +169,15 @@ export default function HomeDashboard() {
     return '12-15 min';
   };
 
+  const getPizzaImage = (name) => {
+    const lowercase = name.toLowerCase();
+    if (lowercase.includes('margherita')) return margheritaImg;
+    if (lowercase.includes('farmhouse') || lowercase.includes('pesto')) return veggieImg;
+    if (lowercase.includes('pepperoni')) return pepperoniImg;
+    if (lowercase.includes('fiery') || lowercase.includes('bbq')) return bbqChickenImg;
+    return margheritaImg; // default fallback
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -96,12 +191,20 @@ export default function HomeDashboard() {
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
   };
 
+  const nextReview = () => {
+    setActiveReviewIdx((prev) => (prev + 1) % reviews.length);
+  };
+
+  const prevReview = () => {
+    setActiveReviewIdx((prev) => (prev - 1 + reviews.length) % reviews.length);
+  };
+
   return (
     <div className="min-h-screen bg-[#0F0B0A] text-[#F8F5F2] py-6 px-4 md:px-8 relative overflow-hidden">
       {/* Dynamic Background Glow Blobs */}
-      <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-pizza-primary/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-[40%] left-[-15%] w-[450px] h-[450px] bg-pizza-gold/5 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-[10%] right-[-10%] w-[400px] h-[400px] bg-pizza-secondary/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-pizza-primary/10 rounded-full blur-[140px] pointer-events-none animate-pulse duration-[6000ms]" />
+      <div className="absolute top-[35%] left-[-15%] w-[500px] h-[500px] bg-pizza-gold/5 rounded-full blur-[120px] pointer-events-none animate-pulse duration-[8000ms]" />
+      <div className="absolute bottom-[5%] right-[-10%] w-[450px] h-[450px] bg-pizza-secondary/5 rounded-full blur-[110px] pointer-events-none animate-pulse duration-[7000ms]" />
 
       <div className="max-w-7xl mx-auto space-y-16 z-10 relative">
         
@@ -115,7 +218,7 @@ export default function HomeDashboard() {
               animate={{ opacity: 1, x: 0 }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1A120F] border border-pizza-primary/20 text-xs font-black text-pizza-primary"
             >
-              <Sparkles className="w-3.5 h-3.5 animate-spin-slow" />
+              <Sparkles className="w-3.5 h-3.5 text-pizza-gold animate-bounce" />
               <span>THE ULTIMATE DOUGH EXPERIMENT</span>
             </motion.div>
 
@@ -146,67 +249,100 @@ export default function HomeDashboard() {
               transition={{ delay: 0.3 }}
               className="flex flex-wrap gap-4 pt-2"
             >
-              <button 
+              <motion.button 
+                whileHover={{ scale: 1.03, boxShadow: '0 0 25px rgba(255,122,24,0.3)' }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => {
                   const el = document.getElementById('catalog-section');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-4 bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white font-black rounded-2xl text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2"
+                className="px-8 py-4 bg-gradient-to-r from-pizza-primary to-pizza-secondary text-white font-black rounded-2xl text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2"
               >
                 <span>Browse Menu</span>
                 <ArrowRight className="w-4 h-4" />
-              </button>
+              </motion.button>
 
-              <button 
+              <motion.button 
+                whileHover={{ scale: 1.03, borderColor: 'rgba(255,122,24,0.4)' }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => navigate('/customizer?pizzaId=default')}
-                className="px-8 py-4 bg-[#1A120F] border border-white/10 hover:border-pizza-primary/40 text-pizza-light font-black rounded-2xl text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2"
+                className="px-8 py-4 bg-[#1A120F] border border-white/10 text-pizza-light font-black rounded-2xl text-xs uppercase tracking-wider transition-all duration-300 flex items-center gap-2"
               >
-                <ChefHat className="w-4 h-4 text-pizza-gold" />
+                <ChefHat className="w-4 h-4 text-pizza-gold animate-spin-slow" />
                 <span>Live Pizza Customizer</span>
-              </button>
+              </motion.button>
             </motion.div>
 
-            {/* Micro Highlights */}
+            {/* Micro Highlights with Live Counters */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="grid grid-cols-3 gap-6 pt-4 border-t border-white/5 max-w-lg"
+              className="grid grid-cols-3 gap-6 pt-6 border-t border-white/5 max-w-lg"
             >
-              <div>
-                <span className="block text-2xl font-black text-pizza-gold">10k+</span>
+              <div className="relative group p-3 rounded-2xl hover:bg-white/[0.02] border border-transparent hover:border-white/5 transition-all">
+                <span className="block text-2xl font-black text-pizza-gold">{stats.crusts.toLocaleString()}+</span>
                 <span className="text-[10px] text-pizza-subtle uppercase tracking-wider font-semibold">Crusts Served</span>
               </div>
-              <div>
-                <span className="block text-2xl font-black text-pizza-primary">4.9 ★</span>
+              <div className="relative group p-3 rounded-2xl hover:bg-white/[0.02] border border-transparent hover:border-white/5 transition-all">
+                <span className="block text-2xl font-black text-pizza-primary">{stats.rating.toFixed(1)} ★</span>
                 <span className="text-[10px] text-pizza-subtle uppercase tracking-wider font-semibold">Average Rating</span>
               </div>
-              <div>
-                <span className="block text-2xl font-black text-pizza-basil">30 min</span>
+              <div className="relative group p-3 rounded-2xl hover:bg-white/[0.02] border border-transparent hover:border-white/5 transition-all">
+                <span className="block text-2xl font-black text-pizza-basil">{stats.speed} min</span>
                 <span className="text-[10px] text-pizza-subtle uppercase tracking-wider font-semibold">Guaranteed Delivery</span>
               </div>
             </motion.div>
           </div>
 
-          {/* Right Hero: Floating Premium Pizza Illustration */}
           <div className="lg:col-span-5 flex justify-center items-center relative">
+            {/* Floating Tomato -> Onion */}
+            <motion.div
+              animate={{ y: [0, 14, 0], rotate: [0, 25, 0] }}
+              transition={{ repeat: Infinity, duration: 5.5, ease: "easeInOut" }}
+              className="absolute top-1/4 -left-12 z-10 pointer-events-none hidden md:block"
+            >
+              <img src={onionTopping} alt="Floating Onion" className="w-12 h-12 object-contain drop-shadow-xl select-none pointer-events-none" />
+            </motion.div>
+ 
+            {/* Floating Pepperoni */}
+            <motion.div
+              animate={{ y: [0, -12, 0], rotate: [0, 45, 0] }}
+              transition={{ repeat: Infinity, duration: 4.8, ease: "easeInOut" }}
+              className="absolute -top-8 -right-4 z-10 pointer-events-none hidden md:block"
+            >
+              <img src={pepperTopping} alt="Floating Pepperoni" className="w-12 h-12 object-contain drop-shadow-xl select-none pointer-events-none" />
+            </motion.div>
+ 
+            {/* Floating Mushroom */}
+            <motion.div
+              animate={{ y: [0, -10, 0], x: [0, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 6.2, ease: "easeInOut" }}
+              className="absolute bottom-1/4 -right-12 z-10 pointer-events-none hidden md:block"
+            >
+              <img src={mushroomTopping} alt="Floating Mushroom" className="w-11 h-11 object-contain drop-shadow-xl select-none pointer-events-none" />
+            </motion.div>
+ 
+            {/* Floating Basil -> Capsicum */}
+            <motion.div
+              animate={{ y: [0, 12, 0], rotate: [0, -35, 0] }}
+              transition={{ repeat: Infinity, duration: 5.0, ease: "easeInOut" }}
+              className="absolute -bottom-8 -left-6 z-10 pointer-events-none hidden md:block"
+            >
+              <img src={capsicumTopping} alt="Floating Capsicum" className="w-10 h-10 object-contain drop-shadow-xl select-none pointer-events-none" />
+            </motion.div>
+ 
             <motion.div 
               animate={{ y: [0, -15, 0] }}
               transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
               className="w-72 h-72 md:w-96 md:h-96 bg-gradient-to-tr from-pizza-primary/20 to-pizza-gold/20 rounded-full flex items-center justify-center p-10 border border-white/10 relative shadow-premium-hover"
             >
-              <div className="absolute inset-4 rounded-full bg-[#1A120F] flex items-center justify-center border border-white/5">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" className="w-56 h-56 md:w-76 md:h-76 transform rotate-[-15deg]">
-                  <path d="M 50 85 A 35 35 0 0 1 19.14 32.5 L 50 15 Z" fill="#FFB627" />
-                  <path d="M 50 80 A 30 30 0 0 1 23.64 35 L 50 20 Z" fill="#FFD54F" />
-                  <circle cx="38" cy="45" r="5.5" fill="#FF4D4D" />
-                  <circle cx="45" cy="65" r="4.5" fill="#FF4D4D" />
-                  <circle cx="32" cy="60" r="5" fill="#FF4D4D" />
-                  <circle cx="55" cy="55" r="5.5" fill="#FF4D4D" />
-                  <path d="M 45 35 Q 48 32 45 30 Q 42 32 45 35 Z" fill="#35C26B" />
-                  <path d="M 28 48 Q 31 45 28 43 Q 25 45 28 48 Z" fill="#35C26B" />
-                  <ellipse cx="45" cy="52" rx="2" ry="4" fill="#FFB627" transform="rotate(-30 45 52)" />
-                </svg>
+              <div className="absolute inset-4 rounded-full bg-[#1A120F] flex items-center justify-center border border-white/5 overflow-hidden">
+                <img 
+                  src={pepperoniImg} 
+                  alt="Crustiva Specialty" 
+                  className="w-64 h-64 md:w-80 md:h-80 object-contain transform rotate-[-15deg] animate-spin-slow select-none pointer-events-none" 
+                />
               </div>
               <div className="absolute -top-4 -right-4 bg-pizza-secondary text-white font-black text-[10px] tracking-widest uppercase p-2 px-3.5 rounded-2xl border border-white/15 shadow-glow rotate-[15deg]">
                 🔥 HOT & FRESH
@@ -220,31 +356,32 @@ export default function HomeDashboard() {
         </section>
 
         {/* ==================================================
-            2. CHEF'S SPECIALS / PROMOTIONS BANNER
+            2. CHEF'S SPECIALS / PROMOTIONS BANNER (GLASSMORPHIC)
            ================================================== */}
-        <section className="bg-[#1A120F] border border-white/5 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden shadow-premium">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-pizza-primary/10 rounded-full blur-[80px] pointer-events-none" />
+        <section className="bg-white/[0.02] border border-white/[0.05] backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden shadow-premium group hover:border-pizza-primary/20 transition-all duration-500">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-pizza-primary/10 rounded-full blur-[100px] pointer-events-none" />
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
             <div className="md:col-span-8 space-y-4">
               <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pizza-gold/10 border border-pizza-gold/20 text-[10px] font-black uppercase text-pizza-gold tracking-widest">
-                <Award className="w-3 h-3" />
+                <Award className="w-3 h-3 text-pizza-gold" />
                 <span>Chef's Choice Recipe</span>
               </span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white font-sans">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-white font-sans group-hover:text-pizza-gold transition-colors duration-300">
                 Signature Truffle Pesto Mushroom
               </h2>
               <p className="text-sm text-pizza-gray leading-relaxed max-w-xl">
                 Slow-simmered pesto basil paste, earthy white mushrooms, tangy Greek feta chunks, freshly handpicked baby spinach, and premium dark truffle olive oil splash.
               </p>
-              <div className="flex gap-4 pt-2">
-                <span className="text-2xl font-black text-pizza-primary">₹599</span>
-                <span className="text-xs text-pizza-subtle line-through pt-2">₹749</span>
+              <div className="flex gap-4 pt-2 items-center">
+                <span className="text-3xl font-black text-pizza-primary">₹599</span>
+                <span className="text-xs text-pizza-subtle line-through">₹749</span>
+                <span className="text-xs font-bold text-pizza-basil bg-pizza-basil/10 border border-pizza-basil/20 px-2 py-0.5 rounded-full">Save 20%</span>
               </div>
             </div>
             <div className="md:col-span-4 flex justify-end">
               <button 
                 onClick={() => navigate('/customizer?pizzaId=default')}
-                className="w-full md:w-auto px-8 py-4 bg-pizza-primary hover:bg-pizza-primary/90 text-white font-black text-xs uppercase tracking-wider rounded-2xl transition-all shadow-glow flex items-center justify-center gap-2"
+                className="w-full md:w-auto px-8 py-4 bg-pizza-primary hover:bg-pizza-primary/90 text-white font-black text-xs uppercase tracking-wider rounded-2xl transition-all shadow-glow flex items-center justify-center gap-2 transform hover:scale-[1.02]"
               >
                 <span>Order Special</span>
                 <ArrowRight className="w-4 h-4" />
@@ -381,30 +518,12 @@ export default function HomeDashboard() {
 
                   <div className="space-y-4">
                     {/* Handcrafted Visual Illustration Area */}
-                    <div className="w-full h-44 bg-[#0F0B0A] rounded-2xl flex items-center justify-center p-6 border border-white/5 relative overflow-hidden group-hover:bg-[#1A120F] transition-colors duration-300">
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 100 100" 
-                        className="w-28 h-28 transform group-hover:rotate-12 transition-transform duration-500 drop-shadow-lg"
-                      >
-                        <path d="M 50 85 A 35 35 0 0 1 19.14 32.5 L 50 15 Z" fill="#FFB627" />
-                        <path d="M 50 80 A 30 30 0 0 1 23.64 35 L 50 20 Z" fill="#FFD54F" />
-                        {pizza.category === 'veg' ? (
-                          <>
-                            <circle cx="38" cy="45" r="4.5" fill="#35C26B" />
-                            <circle cx="45" cy="65" r="4" fill="#FF6B35" />
-                            <circle cx="32" cy="60" r="3.5" fill="#35C26B" />
-                          </>
-                        ) : (
-                          <>
-                            <circle cx="38" cy="45" r="5" fill="#FF4D4D" />
-                            <circle cx="45" cy="65" r="4.5" fill="#FF4D4D" />
-                            <circle cx="32" cy="60" r="4" fill="#FF4D4D" />
-                          </>
-                        )}
-                        <path d="M 45 35 Q 48 32 45 30 Q 42 32 45 35 Z" fill="#35C26B" />
-                        <path d="M 28 48 Q 31 45 28 43 Q 25 45 28 48 Z" fill="#35C26B" />
-                      </svg>
+                    <div className="w-full h-44 bg-[#0F0B0A] rounded-2xl flex items-center justify-center p-6 border border-white/5 relative overflow-hidden group-hover:bg-[#1E1512] transition-colors duration-300">
+                      <img 
+                        src={getPizzaImage(pizza.name)} 
+                        alt={pizza.name} 
+                        className="w-32 h-32 object-contain transform group-hover:scale-105 group-hover:rotate-6 transition-all duration-500 drop-shadow-xl select-none pointer-events-none" 
+                      />
                       
                       {/* Interactive visual tags inside the preview */}
                       <span className="absolute bottom-2.5 right-2.5 text-[9px] bg-pizza-charcoal px-2 py-0.5 rounded-md border border-white/5 text-pizza-gray flex items-center gap-1 font-bold">
@@ -445,12 +564,27 @@ export default function HomeDashboard() {
                   {/* Pricing and Action CTAs */}
                   <div className="pt-4 border-t border-white/5 flex items-center justify-between mt-5">
                     <div>
-                      <span className="block text-[9px] text-pizza-subtle uppercase font-semibold">Starting at</span>
-                      <span className="text-2xl font-black text-pizza-gold">₹{pizza.price}</span>
+                      <span className="block text-[9px] text-pizza-subtle uppercase font-semibold">
+                        {pizza.status === 'out_of_stock' ? 'Status' : 'Starting at'}
+                      </span>
+                      {pizza.status === 'out_of_stock' ? (
+                        <span className="text-[10px] font-black text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 rounded-lg block mt-0.5 uppercase tracking-wide">
+                          Currently Unavailable
+                        </span>
+                      ) : (
+                        <span className="text-2xl font-black text-pizza-gold">₹{pizza.price}</span>
+                      )}
                     </div>
 
                     <div className="flex gap-2">
-                      {pizza.isCustomizable ? (
+                      {pizza.status === 'out_of_stock' ? (
+                        <button
+                          disabled
+                          className="px-4 py-2.5 bg-white/5 border border-white/10 text-white/30 font-black rounded-xl text-xs flex items-center gap-1.5 uppercase tracking-wide cursor-not-allowed"
+                        >
+                          Out of Stock
+                        </button>
+                      ) : pizza.isCustomizable ? (
                         <button
                           onClick={() => navigate(`/customizer?pizzaId=${pizza._id}`)}
                           className="px-4 py-2.5 bg-pizza-primary hover:bg-pizza-primary/90 hover:shadow-glow text-white font-black rounded-xl text-xs transition-all duration-300 flex items-center gap-1.5 uppercase tracking-wide"
@@ -480,29 +614,29 @@ export default function HomeDashboard() {
            ================================================== */}
         <section className="py-12 border-t border-b border-white/5">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="w-12 h-12 bg-pizza-primary/10 border border-pizza-primary/20 rounded-full flex items-center justify-center mx-auto text-pizza-primary">
+            <div className="space-y-2 group p-4 rounded-3xl hover:bg-white/[0.01] transition-all">
+              <div className="w-12 h-12 bg-pizza-primary/10 border border-pizza-primary/20 rounded-full flex items-center justify-center mx-auto text-pizza-primary group-hover:scale-110 transition-transform">
                 <ChefHat className="w-6 h-6" />
               </div>
               <h4 className="font-extrabold text-base text-white font-sans">Artisanal Sourdough</h4>
               <p className="text-xs text-pizza-subtle">Slow fermented for 48 hours for ultimate bubbly textures.</p>
             </div>
-            <div className="space-y-2">
-              <div className="w-12 h-12 bg-pizza-gold/10 border border-pizza-gold/20 rounded-full flex items-center justify-center mx-auto text-pizza-gold">
+            <div className="space-y-2 group p-4 rounded-3xl hover:bg-white/[0.01] transition-all">
+              <div className="w-12 h-12 bg-pizza-gold/10 border border-pizza-gold/20 rounded-full flex items-center justify-center mx-auto text-pizza-gold group-hover:scale-110 transition-transform">
                 <Flame className="w-6 h-6" />
               </div>
               <h4 className="font-extrabold text-base text-white font-sans">450°C Woodfire Deck</h4>
               <p className="text-xs text-pizza-subtle">Cooked to absolute blistered leoparding spots in 90 seconds.</p>
             </div>
-            <div className="space-y-2">
-              <div className="w-12 h-12 bg-pizza-basil/10 border border-pizza-basil/20 rounded-full flex items-center justify-center mx-auto text-pizza-basil">
+            <div className="space-y-2 group p-4 rounded-3xl hover:bg-white/[0.01] transition-all">
+              <div className="w-12 h-12 bg-pizza-basil/10 border border-pizza-basil/20 rounded-full flex items-center justify-center mx-auto text-pizza-basil group-hover:scale-110 transition-transform">
                 <Leaf className="w-6 h-6" />
               </div>
               <h4 className="font-extrabold text-base text-white font-sans">100% Fresh Toppings</h4>
               <p className="text-xs text-pizza-subtle">Hand-selected fresh garden produce and cured imports.</p>
             </div>
-            <div className="space-y-2">
-              <div className="w-12 h-12 bg-pizza-secondary/10 border border-pizza-secondary/20 rounded-full flex items-center justify-center mx-auto text-pizza-secondary">
+            <div className="space-y-2 group p-4 rounded-3xl hover:bg-white/[0.01] transition-all">
+              <div className="w-12 h-12 bg-pizza-secondary/10 border border-pizza-secondary/20 rounded-full flex items-center justify-center mx-auto text-pizza-secondary group-hover:scale-110 transition-transform">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <h4 className="font-extrabold text-base text-white font-sans">Strict Safety Standards</h4>
@@ -512,39 +646,59 @@ export default function HomeDashboard() {
         </section>
 
         {/* ==================================================
-            6. TESTIMONIALS SLIDER SECTION
+            6. TESTIMONIALS SLIDER SECTION (DYNAMIC SLIDER)
            ================================================== */}
-        <section className="space-y-8 text-center max-w-4xl mx-auto">
+        <section className="space-y-8 text-center max-w-3xl mx-auto py-8">
           <div className="space-y-2">
             <span className="text-[10px] font-black text-pizza-primary uppercase tracking-widest block">FEEDBACKS</span>
             <h3 className="text-3xl font-extrabold text-white font-sans">What Gourmet Food Lovers Say</h3>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-[#1A120F] border border-white/5 p-8 rounded-3xl text-left space-y-4 shadow-premium">
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-3.5 h-3.5 fill-pizza-gold text-pizza-gold" />)}
-              </div>
-              <p className="text-xs italic text-pizza-gray leading-relaxed">
-                "The Live Customizer in Crustiva is phenomenal! I could visually add toppings layer by layer and order a personal thin crust cheese burst that arrived blazing hot. Truly elite UI/UX experience!"
-              </p>
-              <div>
-                <span className="block font-extrabold text-xs text-white">Ananya Sen</span>
-                <span className="text-[9px] text-pizza-subtle">Verified Food Blogger</span>
-              </div>
-            </div>
+          <div className="relative bg-[#1A120F] border border-white/5 p-8 md:p-12 rounded-[2.5rem] text-left shadow-premium overflow-hidden min-h-[220px] flex flex-col justify-between">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-pizza-gold/5 rounded-full blur-[60px] pointer-events-none" />
+            
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeReviewIdx}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6"
+              >
+                <div className="flex gap-1">
+                  {Array.from({ length: reviews[activeReviewIdx].stars }).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-pizza-gold text-pizza-gold" />
+                  ))}
+                </div>
+                
+                <p className="text-sm md:text-base italic text-pizza-gray leading-relaxed">
+                  "{reviews[activeReviewIdx].text}"
+                </p>
 
-            <div className="bg-[#1A120F] border border-white/5 p-8 rounded-3xl text-left space-y-4 shadow-premium">
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-3.5 h-3.5 fill-pizza-gold text-pizza-gold" />)}
-              </div>
-              <p className="text-xs italic text-pizza-gray leading-relaxed">
-                "Crustiva has changed the game in pizza delivery. The level of transparency in ingredient stocks, gorgeous microinteractions, and rapid doorstep delivery makes it my absolute go-to startup product!"
-              </p>
-              <div>
-                <span className="block font-extrabold text-xs text-white">Vikram Malhotra</span>
-                <span className="text-[9px] text-pizza-subtle">Startup Founder</span>
-              </div>
+                <div className="flex justify-between items-end">
+                  <div>
+                    <span className="block font-extrabold text-sm text-white">{reviews[activeReviewIdx].name}</span>
+                    <span className="text-[10px] text-pizza-subtle">{reviews[activeReviewIdx].role}</span>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Slider Controls */}
+            <div className="flex justify-end gap-2 mt-6">
+              <button 
+                onClick={prevReview}
+                className="p-2.5 bg-white/5 border border-white/10 hover:border-pizza-primary/40 text-white rounded-xl transition-all"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={nextReview}
+                className="p-2.5 bg-white/5 border border-white/10 hover:border-pizza-primary/40 text-white rounded-xl transition-all"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
         </section>

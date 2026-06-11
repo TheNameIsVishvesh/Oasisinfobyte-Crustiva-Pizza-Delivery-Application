@@ -21,6 +21,7 @@ import OrdersPage from './pages/OrdersPage';
 // Import Admin Protected Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminInventory from './pages/admin/AdminInventory';
+import AdminMenu from './pages/admin/AdminMenu';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminUsers from './pages/admin/AdminUsers';
 
@@ -41,7 +42,7 @@ const ProtectedRoute = ({ children }) => {
 
 // Guard: Admin-Only Protected Route
 const AdminRoute = ({ children }) => {
-  const { isAuthenticated, isAdmin, loading } = useAuth();
+  const { isAdmin, loading } = useAuth();
   
   if (loading) {
     return (
@@ -51,7 +52,7 @@ const AdminRoute = ({ children }) => {
     );
   }
   
-  return isAuthenticated && isAdmin ? children : <Navigate to="/" replace />;
+  return isAdmin ? children : <Navigate to="/login" replace />;
 };
 
 export default function App() {
@@ -91,6 +92,14 @@ export default function App() {
             element={
               <AdminRoute>
                 <AdminDashboard />
+              </AdminRoute>
+            } 
+          />
+          <Route 
+            path="/admin/menu" 
+            element={
+              <AdminRoute>
+                <AdminMenu />
               </AdminRoute>
             } 
           />

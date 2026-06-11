@@ -12,6 +12,13 @@ import CrustSvg from '../assets/pizza/CrustSvg';
 import CheeseLayer from '../assets/pizza/CheeseLayer';
 import ToppingIcon, { veggieScatter, meatScatter } from '../assets/pizza/ToppingIcon';
 
+// Sauce image assets
+import marinaraSauceImg from '../assets/pizza/sauces/classic-marinara-sauce.png';
+import schezwanSauceImg from '../assets/pizza/sauces/spicy-schezwan-sauce.png';
+import alfredoSauceImg from '../assets/pizza/sauces/creamy-alfredo-white-sauce.png';
+import bbqSauceImg from '../assets/pizza/sauces/smokey-bbq-sauce.png';
+import pestoSauceImg from '../assets/pizza/sauces/pesto-basil-sauce.png';
+
 // Organic speckle details for Pesto and Schezwan sauces
 const Speckles = ({ color, count }) => {
   const dots = Array.from({ length: count });
@@ -62,6 +69,139 @@ const playSynthPop = (frequency = 600, duration = 0.1, type = 'sine') => {
   }
 };
 
+// Deterministic pseudo-random number generator for consistent topping coordinates
+const createPRNG = (seedString) => {
+  let h = 0;
+  for (let i = 0; i < seedString.length; i++) {
+    h = (Math.imul(31, h) + seedString.charCodeAt(i)) | 0;
+  }
+  return () => {
+    h = (Math.imul(1664525, h) + 1013904223) | 0;
+    return (h >>> 0) / 4294967296;
+  };
+};
+
+// Intelligently scatters toppings based on size and avoids total overlap collisions
+const generateToppingPlacements = (selectedVeggies, selectedMeats, selectedSize) => {
+  const targetCounts = {
+    'Sliced Mushrooms': 13,
+    'Sweet Corn': 28,
+    'Crisp Capsicum': 16,
+    'Red Onions': 16,
+    'Black Olives': 14,
+    'Jalapenos': 14,
+    'Spicy Pepperoni': 16,
+    'Smoked Chicken Tikka': 16,
+    'Italian Sausage': 14,
+    'BBQ Ham': 14,
+    'Paneer': 13
+  };
+
+  // Density scales: Small -> fewer, Medium -> standard, Large -> maximum
+  const sizeMultiplier = selectedSize === 'Small' ? 0.72 : selectedSize === 'Medium' ? 1.0 : 1.28;
+
+  const allToppingsToPlace = [];
+  selectedVeggies.forEach(veg => {
+    const baseCount = targetCounts[veg] || 14;
+    const count = Math.round(baseCount * sizeMultiplier);
+    allToppingsToPlace.push({ name: veg, count, type: 'veggie' });
+  });
+
+  selectedMeats.forEach(meat => {
+    const baseCount = targetCounts[meat] || 14;
+    const count = Math.round(baseCount * sizeMultiplier);
+    allToppingsToPlace.push({ name: meat, count, type: 'meat' });
+  });
+
+  // Unique hash seed based on current combination & dimensions
+  const seedString = [...selectedVeggies, ...selectedMeats].sort().join('-') + '-' + selectedSize;
+  const rng = createPRNG(seedString || 'default-pizza');
+
+  const placements = {};
+  const placedPoints = []; // List of already occupied regions { x, y, r }
+
+  // Size collision radius mapping
+  const sizeMap = {
+    'Spicy Pepperoni': 16,
+    'Smoked Chicken Tikka': 14,
+    'BBQ Ham': 14,
+    'Sliced Mushrooms': 14,
+    'Italian Sausage': 13,
+    'Paneer': 13,
+    'Crisp Capsicum': 13,
+    'Red Onions': 13,
+    'Jalapenos': 12,
+    'Black Olives': 11,
+    'Sweet Corn': 7
+  };
+
+  // Sort toppings by size descending to register larger items first
+  const sortedToppings = [...allToppingsToPlace].sort((a, b) => {
+    const sizeA = sizeMap[a.name] || 13;
+    const sizeB = sizeMap[b.name] || 13;
+    return sizeB - sizeA;
+  });
+
+  sortedToppings.forEach(topping => {
+    placements[topping.name] = [];
+    const rTopping = sizeMap[topping.name] || 13;
+
+    for (let i = 0; i < topping.count; i++) {
+      let bestX = 0;
+      let bestY = 0;
+      let bestRotate = 0;
+      let minOverlap = Infinity;
+
+      // Try candidate positions to find collision-free spot inside pizza bounds
+      for (let attempt = 0; attempt < 80; attempt++) {
+        const theta = rng() * 2 * Math.PI;
+        // Stay within circular radius bounds of ~85px (leaving room for crust borders)
+        const rVal = 12 + 73 * Math.sqrt(rng());
+        const x = rVal * Math.cos(theta);
+        const y = rVal * Math.sin(theta);
+        const rotate = Math.floor(rng() * 360);
+
+        let overlapSum = 0;
+        let collision = false;
+
+        for (const pt of placedPoints) {
+          const dx = x - pt.x;
+          const dy = y - pt.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const minDist = rTopping + pt.r - 2.5; // Allow slight organic cluster overlap (2.5px)
+
+          if (dist < minDist) {
+            collision = true;
+            overlapSum += (minDist - dist);
+          }
+        }
+
+        if (!collision) {
+          bestX = x;
+          bestY = y;
+          bestRotate = rotate;
+          break; // Perfect spot found!
+        } else {
+          if (overlapSum < minOverlap) {
+            minOverlap = overlapSum;
+            bestX = x;
+            bestY = y;
+            bestRotate = rotate;
+          }
+        }
+      }
+
+      const finalX = parseFloat(bestX.toFixed(2));
+      const finalY = parseFloat(bestY.toFixed(2));
+      
+      placements[topping.name].push({ x: finalX, y: finalY, rotate: bestRotate });
+      placedPoints.push({ x: finalX, y: finalY, r: rTopping });
+    }
+  });
+
+  return placements;
+};
+
 // Main visual Deck container (Atmospheric effects, Steam, Embers, Pizza layers)
 const VisualPizzaDeck = ({
   pizza,
@@ -74,20 +214,38 @@ const VisualPizzaDeck = ({
   embers,
   deckRef
 }) => {
-  const getSauceGradient = (sauce) => {
+  const getSauceImage = (sauce) => {
     switch (sauce) {
       case 'Classic Marinara Sauce':
-        return 'radial-gradient(circle, #D84315 45%, #C62828 78%, #9E0D0D 95%)';
+        return marinaraSauceImg;
       case 'Spicy Schezwan Sauce':
-        return 'radial-gradient(circle, #D84315 35%, #9E0D0D 72%, #6A000A 95%)';
+        return schezwanSauceImg;
       case 'Creamy Alfredo White Sauce':
-        return 'radial-gradient(circle, #FFFDE7 50%, #F5F5F5 80%, #D7CCC8 95%)';
+        return alfredoSauceImg;
       case 'Smokey BBQ Sauce':
-        return 'radial-gradient(circle, #5D4037 45%, #3E2723 78%, #1A0C08 95%)';
-      default: // Pesto / green
-        return 'radial-gradient(circle, #4CAF50 40%, #2E7D32 75%, #1B5E20 95%)';
+        return bbqSauceImg;
+      case 'Pesto Basil Sauce':
+        return pestoSauceImg;
+      default:
+        return marinaraSauceImg;
     }
   };
+
+  // Compute dynamic collision-free coordinate mapping
+  const placements = React.useMemo(() => {
+    return generateToppingPlacements(selectedVeggies, selectedMeats, selectedSize);
+  }, [selectedVeggies, selectedMeats, selectedSize]);
+
+  // Dynamically reduce cheese opacity as topping density increases
+  const totalToppings = selectedVeggies.length + selectedMeats.length;
+  let cheeseOpacity = 0.9;
+  if (totalToppings > 0) {
+    if (totalToppings <= 2) {
+      cheeseOpacity = 0.81; // 90% of base 0.9
+    } else {
+      cheeseOpacity = 0.74; // ~82% of base 0.9
+    }
+  }
 
   return (
     <div 
@@ -176,35 +334,31 @@ const VisualPizzaDeck = ({
               animate={{ scale: 0.88, opacity: 1 }}
               exit={{ scale: 0.08, opacity: 0 }}
               transition={{ type: "spring", stiffness: 110, damping: 15 }}
-              className="absolute inset-0 rounded-full z-10 overflow-hidden"
-              style={{
-                background: getSauceGradient(selectedSauce),
-                boxShadow: 'inset 0 0 16px rgba(0,0,0,0.3)',
-              }}
+              className="absolute inset-0 rounded-full z-10 flex items-center justify-center pointer-events-none"
             >
-              {/* Glossy shine glaze */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-transparent pointer-events-none rounded-full" />
-              {/* Spice flakes for Schezwan/Pesto */}
-              {selectedSauce === 'Spicy Schezwan Sauce' && <Speckles color="#3E000C" count={30} />}
-              {selectedSauce === 'Pesto Sauce' && <Speckles color="#1B5E20" count={30} />}
+              <img
+                src={getSauceImage(selectedSauce)}
+                alt={selectedSauce}
+                className="w-[88%] h-[88%] object-contain select-none pointer-events-none"
+              />
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Layer C: Melted Cheese */}
-        <CheeseLayer cheese={selectedCheese} />
+        {/* Layer C: Melted Cheese (with dynamic opacity adjustments) */}
+        <CheeseLayer cheese={selectedCheese} opacity={cheeseOpacity} />
 
         {/* Layer D: scattered Veggie elements */}
         <AnimatePresence>
           {selectedVeggies.flatMap((vegName) => {
-            const positions = veggieScatter[vegName] || [];
+            const positions = placements[vegName] || [];
             return positions.map((pos, idx) => (
               <motion.div
                 key={`${vegName}_${idx}`}
                 initial={{ opacity: 0, y: -220, scale: 0, rotate: -45 }}
                 animate={{ opacity: 1, y: pos.y * 1.3, x: pos.x * 1.3, scale: 1, rotate: pos.rotate }}
                 exit={{ opacity: 0, scale: 0, y: 150, rotate: 180, transition: { duration: 0.45 } }}
-                transition={{ type: "spring", stiffness: 130, damping: 11, delay: idx * 0.02 }}
+                transition={{ type: "spring", stiffness: 140, damping: 11.5, delay: idx * 0.015 }}
                 className="absolute z-30 pointer-events-none"
               >
                 <ToppingIcon name={vegName} />
@@ -216,14 +370,14 @@ const VisualPizzaDeck = ({
         {/* Layer E: scattered Meat elements */}
         <AnimatePresence>
           {selectedMeats.flatMap((meatName) => {
-            const positions = meatScatter[meatName] || [];
+            const positions = placements[meatName] || [];
             return positions.map((pos, idx) => (
               <motion.div
                 key={`${meatName}_${idx}`}
                 initial={{ opacity: 0, y: -220, scale: 0, rotate: -45 }}
                 animate={{ opacity: 1, y: pos.y * 1.3, x: pos.x * 1.3, scale: 1, rotate: pos.rotate }}
                 exit={{ opacity: 0, scale: 0, y: 150, rotate: 180, transition: { duration: 0.45 } }}
-                transition={{ type: "spring", stiffness: 150, damping: 11, delay: idx * 0.02 }}
+                transition={{ type: "spring", stiffness: 140, damping: 11.5, delay: idx * 0.015 }}
                 className="absolute z-35 pointer-events-none"
               >
                 <ToppingIcon name={meatName} />
@@ -254,6 +408,16 @@ export default function PizzaCustomizer() {
   const [selectedMeats, setSelectedMeats] = useState([]);
   const [quantity, setQuantity] = useState(1);
 
+  // Sound system state
+  const [soundEnabled, setSoundEnabled] = useState(true);
+
+  // Local helper to filter sounds when disabled
+  const playSound = (frequency = 600, duration = 0.1, type = 'sine') => {
+    if (soundEnabled) {
+      playSynthPop(frequency, duration, type);
+    }
+  };
+
   // Interaction fly state & refs
   const [flyingToppings, setFlyingToppings] = useState([]);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -283,7 +447,9 @@ export default function PizzaCustomizer() {
         let activePizza = null;
 
         if (!pizzaId || pizzaId === 'default') {
-          activePizza = pRes.data.data.find(p => p.isCustomizable) || pRes.data.data[0];
+          activePizza = pRes.data.data.find(p => p.isCustomizable && p.status === 'available') || 
+                        pRes.data.data.find(p => p.status === 'available') || 
+                        pRes.data.data[0];
         } else {
           activePizza = pRes.data.data.find(p => p._id === pizzaId);
         }
@@ -293,6 +459,19 @@ export default function PizzaCustomizer() {
           setLoading(false);
           return;
         }
+
+        if (activePizza.status === 'hidden') {
+          setError('This pizza is temporarily unavailable.');
+          setLoading(false);
+          return;
+        }
+
+        if (activePizza.status === 'out_of_stock') {
+          setError('This pizza is currently unavailable (Out of Stock).');
+          setLoading(false);
+          return;
+        }
+
         setPizza(activePizza);
 
         // Fetch options
@@ -362,6 +541,24 @@ export default function PizzaCustomizer() {
 
   const currentItemPrice = calculateCurrentPrice();
 
+  const checkIsCustomized = () => {
+    if (!options) return false;
+    const defaultBase = options.bases.find(b => b.stock > 0)?.name || options.bases[0]?.name;
+    const defaultSauce = options.sauces.find(s => s.stock > 0)?.name || options.sauces[0]?.name;
+    const defaultCheese = options.cheeses.find(c => c.stock > 0)?.name || options.cheeses[0]?.name;
+
+    return (
+      selectedSize !== 'Medium' ||
+      selectedBase !== defaultBase ||
+      selectedSauce !== defaultSauce ||
+      selectedCheese !== defaultCheese ||
+      selectedVeggies.length > 0 ||
+      selectedMeats.length > 0
+    );
+  };
+
+  const isCustomized = checkIsCustomized();
+
   const handleVeggieToggle = (vegName) => {
     setSelectedVeggies(prev => 
       prev.includes(vegName) ? prev.filter(v => v !== vegName) : [...prev, vegName]
@@ -396,26 +593,46 @@ export default function PizzaCustomizer() {
     return { x: window.innerWidth / 3, y: window.innerHeight / 2 };
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (customizeFlag = false) => {
     if (!selectedBase || !selectedSauce || !selectedCheese) {
       alert('Please select a crust base, sauce and cheese blend.');
       return;
     }
 
     // Play baking C major cascade
-    playSynthPop(523.25, 0.15, 'sine'); // C5
-    setTimeout(() => playSynthPop(659.25, 0.15, 'sine'), 80); // E5
-    setTimeout(() => playSynthPop(783.99, 0.25, 'sine'), 160); // G5
+    playSound(523.25, 0.15, 'sine'); // C5
+    setTimeout(() => playSound(659.25, 0.15, 'sine'), 80); // E5
+    setTimeout(() => playSound(783.99, 0.25, 'sine'), 160); // G5
 
-    const customization = {
-      base: selectedBase,
-      sauce: selectedSauce,
-      cheese: selectedCheese,
-      veggies: selectedVeggies,
-      meat: selectedMeats,
-    };
+    const defaultBase = options.bases.find(b => b.stock > 0)?.name || options.bases[0]?.name;
+    const defaultSauce = options.sauces.find(s => s.stock > 0)?.name || options.sauces[0]?.name;
+    const defaultCheese = options.cheeses.find(c => c.stock > 0)?.name || options.cheeses[0]?.name;
 
-    addToCart({ ...pizza, price: currentItemPrice }, customization, selectedSize, quantity);
+    const customization = customizeFlag
+      ? {
+          base: selectedBase,
+          sauce: selectedSauce,
+          cheese: selectedCheese,
+          veggies: selectedVeggies,
+          meat: selectedMeats,
+        }
+      : {
+          base: defaultBase,
+          sauce: defaultSauce,
+          cheese: defaultCheese,
+          veggies: [],
+          meat: [],
+        };
+
+    const finalSize = customizeFlag ? selectedSize : 'Medium';
+    const finalPrice = customizeFlag ? currentItemPrice : pizza.price;
+
+    addToCart(
+      { ...pizza, price: finalPrice, isCustomized: customizeFlag },
+      customization,
+      finalSize,
+      quantity
+    );
     
     if (mobileDrawerOpen) setMobileDrawerOpen(false);
     navigate('/cart');
@@ -441,7 +658,7 @@ export default function PizzaCustomizer() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0F0B0A] text-[#F8F5F2] py-8 px-4 md:px-8 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#0F0B0A] text-[#F8F5F2] py-8 px-4 md:px-8 relative overflow-x-clip font-sans">
       
       {/* 1. Global Defs for Pizza rendering */}
       <svg className="absolute w-0 h-0 pointer-events-none" style={{ position: 'absolute', width: 0, height: 0 }}>
@@ -499,12 +716,32 @@ export default function PizzaCustomizer() {
           <span>Back to Gourmet Catalog</span>
         </Link>
 
-        {/* Header Title */}
-        <div className="space-y-1">
-          <span className="text-[10px] font-black text-pizza-primary tracking-widest uppercase block">BUILD ENGINE 2.0</span>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
-            Crustiva Live Pizza Customizer
-          </h2>
+        {/* Header Title with Sound Toggle */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="space-y-1">
+            <span className="text-[10px] font-black text-pizza-primary tracking-widest uppercase block">BUILD ENGINE 2.0</span>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+              Crustiva Live Pizza Customizer
+            </h2>
+          </div>
+          
+          {/* Sound Toggle Switch */}
+          <div className="flex items-center gap-2.5 bg-white/[0.02] border border-white/[0.06] px-4 py-2 rounded-2xl shadow-premium">
+            <span className="text-xs font-bold text-pizza-gray uppercase tracking-wider">Audio Feedback</span>
+            <button
+              onClick={() => {
+                setSoundEnabled(prev => !prev);
+                if (!soundEnabled) {
+                  playSynthPop(600, 0.1, 'sine');
+                }
+              }}
+              className={`w-10 h-6 rounded-full p-1 transition-colors duration-300 flex items-center ${
+                soundEnabled ? 'bg-pizza-primary justify-end' : 'bg-white/10 justify-start'
+              }`}
+            >
+              <motion.div layout className="w-4 h-4 bg-white rounded-full shadow-premium" />
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2 relative pb-16">
@@ -512,8 +749,8 @@ export default function PizzaCustomizer() {
           {/* ==================================================
               DESKTOP LEFT AREA: STICKY VISUAL PREVIEW
              ================================================== */}
-          <div className="hidden lg:block lg:col-span-5 lg:sticky lg:top-[100px] h-fit pr-1">
-            <div className="bg-white/[0.02] backdrop-blur-xl border border-white/[0.06] p-8 rounded-[2.5rem] shadow-premium text-center space-y-8 relative overflow-hidden">
+           <div className="hidden lg:block lg:col-span-5 lg:sticky lg:top-[100px] h-fit pr-1">
+            <div className="bg-[#1E1512]/60 backdrop-blur-xl border border-white/[0.06] p-8 rounded-[2.5rem] shadow-premium luxury-glow text-center space-y-8 relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pizza-primary via-pizza-gold to-pizza-secondary" />
 
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pizza-primary/10 border border-pizza-primary/20 text-xs font-black text-pizza-primary">
@@ -541,49 +778,83 @@ export default function PizzaCustomizer() {
               </div>
 
               {/* Dynamic Footer Pricing, Counters, Checkout */}
-              <div className="pt-6 border-t border-white/[0.06] flex items-center justify-between px-2">
-                <div className="text-left">
-                  <span className="block text-[10px] text-pizza-subtle uppercase font-semibold">Total Price</span>
-                  <span className="text-3xl font-black text-pizza-gold">₹{currentItemPrice * quantity}</span>
+              <div className="pt-4 border-t border-white/[0.06] space-y-2 text-xs text-left px-2">
+                <div className="flex justify-between">
+                  <span className="text-pizza-gray font-semibold">Base Recipe Price:</span>
+                  <span className="font-bold">₹{pizza.price}</span>
                 </div>
-
-                <div className="flex items-center bg-[#16100D] border border-white/[0.08] rounded-xl px-2 py-1 shadow-premium">
-                  <button 
-                    onClick={() => {
-                      playSynthPop(300, 0.08, 'triangle');
-                      setQuantity(q => Math.max(1, q - 1));
-                    }}
-                    className="w-8 h-8 flex items-center justify-center font-black text-pizza-gray hover:text-white transition-colors"
-                  >
-                    -
-                  </button>
-                  <span className="w-8 text-center text-sm font-black text-white">{quantity}</span>
-                  <button 
-                    onClick={() => {
-                      playSynthPop(350, 0.08, 'triangle');
-                      setQuantity(q => q + 1);
-                    }}
-                    className="w-8 h-8 flex items-center justify-center font-black text-pizza-gray hover:text-white transition-colors"
-                  >
-                    +
-                  </button>
+                <div className="flex justify-between">
+                  <span className="text-pizza-gray font-semibold">Customization Cost:</span>
+                  <span className="font-bold text-pizza-primary">
+                    ₹{isCustomized ? (currentItemPrice - pizza.price) : 0}
+                  </span>
+                </div>
+                <div className="flex justify-between pt-2 border-t border-white/5 text-sm">
+                  <span className="font-black text-white">Final Price (each):</span>
+                  <span className="font-black text-pizza-gold text-lg">
+                    ₹{isCustomized ? currentItemPrice : pizza.price}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center pt-2">
+                  <span className="text-pizza-gray font-semibold">Quantity:</span>
+                  <div className="flex items-center bg-[#16100D] border border-white/[0.08] rounded-xl px-2 py-1 shadow-premium">
+                    <button 
+                      onClick={() => {
+                        playSound(300, 0.08, 'triangle');
+                        setQuantity(q => Math.max(1, q - 1));
+                      }}
+                      className="w-6 h-6 flex items-center justify-center font-black text-pizza-gray hover:text-white transition-colors"
+                    >
+                      -
+                    </button>
+                    <span className="w-6 text-center text-xs font-black text-white">{quantity}</span>
+                    <button 
+                      onClick={() => {
+                        playSound(350, 0.08, 'triangle');
+                        setQuantity(q => q + 1);
+                      }}
+                      className="w-6 h-6 flex items-center justify-center font-black text-pizza-gray hover:text-white transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+                <div className="flex justify-between pt-3 border-t border-white/5 text-sm font-black text-white">
+                  <span>Grand Total:</span>
+                  <span className="text-2xl text-pizza-gold">
+                    ₹{(isCustomized ? currentItemPrice : pizza.price) * quantity}
+                  </span>
                 </div>
               </div>
 
-              <button
-                onClick={handleAddToCart}
-                className="w-full py-4 bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white font-black rounded-2xl text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <ShoppingBag className="w-4.5 h-4.5" />
-                <span>Add Customized Pizza to Basket</span>
-              </button>
+              <div className="space-y-3 pt-2">
+                <button
+                  onClick={() => handleAddToCart(true)}
+                  disabled={!isCustomized}
+                  className={`w-full py-4 font-black rounded-2xl text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${
+                    isCustomized 
+                      ? 'bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white' 
+                      : 'bg-white/5 text-white/20 border border-white/5 cursor-not-allowed'
+                  }`}
+                >
+                  <ShoppingBag className="w-4.5 h-4.5" />
+                  <span>Add Customized Pizza</span>
+                </button>
+
+                <button
+                  onClick={() => handleAddToCart(false)}
+                  className="w-full py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <span>Order Original Recipe (₹{pizza.price})</span>
+                </button>
+              </div>
             </div>
           </div>
 
           {/* ==================================================
               MOBILE STATIC TOP DRAWER TRIGGER (Hidden on Desktop)
              ================================================== */}
-          <div className="lg:hidden w-full bg-white/[0.02] backdrop-blur-xl border border-white/[0.06] p-6 rounded-3xl text-center space-y-6">
+           <div className="lg:hidden w-full bg-[#1E1512]/60 backdrop-blur-xl border border-white/[0.06] p-6 rounded-3xl text-center space-y-6 shadow-premium luxury-glow">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pizza-primary/10 border border-pizza-primary/20 text-xs font-black text-pizza-primary">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Gourmet Recipe: {pizza.name}</span>
@@ -608,7 +879,7 @@ export default function PizzaCustomizer() {
 
             <button
               onClick={() => {
-                playSynthPop(500, 0.12, 'sine');
+                playSound(500, 0.12, 'sine');
                 setMobileDrawerOpen(true);
               }}
               className="w-full py-3 bg-[#1A120F] hover:bg-white/[0.04] border border-white/[0.08] text-pizza-gold font-bold rounded-xl text-xs flex items-center justify-center gap-2"
@@ -638,7 +909,7 @@ export default function PizzaCustomizer() {
                   <button
                     key={s.name}
                     onClick={() => {
-                      playSynthPop(400, 0.1, 'sine');
+                      playSound(400, 0.1, 'sine');
                       setSelectedSize(s.name);
                     }}
                     className={`p-4 rounded-2xl border text-center transition-all duration-300 ${
@@ -670,12 +941,12 @@ export default function PizzaCustomizer() {
                       key={b.name}
                       disabled={isOutOfStock}
                       onClick={() => {
-                        playSynthPop(300, 0.12, 'triangle');
+                        playSound(300, 0.12, 'triangle');
                         setSelectedBase(b.name);
                       }}
                       className={`p-4 rounded-2xl border text-left flex justify-between items-center transition-all duration-300 ${
                         isOutOfStock 
-                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/20 border-transparent'
+                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/25 border-transparent'
                           : isSelected 
                           ? 'bg-gradient-to-r from-pizza-primary/15 to-pizza-gold/5 border-pizza-primary text-white shadow-glow' 
                           : 'bg-[#0A0706]/40 border-white/[0.05] text-pizza-gray hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-white'
@@ -709,12 +980,12 @@ export default function PizzaCustomizer() {
                       key={s.name}
                       disabled={isOutOfStock}
                       onClick={() => {
-                        playSynthPop(250, 0.25, 'sine');
+                        playSound(250, 0.25, 'sine');
                         setSelectedSauce(s.name);
                       }}
                       className={`p-4 rounded-2xl border text-left flex justify-between items-center transition-all duration-300 ${
                         isOutOfStock 
-                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/20 border-transparent'
+                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/25 border-transparent'
                           : isSelected 
                           ? 'bg-gradient-to-r from-pizza-primary/15 to-pizza-gold/5 border-pizza-primary text-white shadow-glow' 
                           : 'bg-[#0A0706]/40 border-white/[0.05] text-pizza-gray hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-white'
@@ -748,12 +1019,12 @@ export default function PizzaCustomizer() {
                       key={c.name}
                       disabled={isOutOfStock}
                       onClick={() => {
-                        playSynthPop(750, 0.1, 'sine');
+                        playSound(750, 0.1, 'sine');
                         setSelectedCheese(c.name);
                       }}
                       className={`p-4 rounded-2xl border text-left flex justify-between items-center transition-all duration-300 ${
                         isOutOfStock 
-                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/20 border-transparent'
+                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/25 border-transparent'
                           : isSelected 
                           ? 'bg-gradient-to-r from-pizza-primary/15 to-pizza-gold/5 border-pizza-primary text-white shadow-glow' 
                           : 'bg-[#0A0706]/40 border-white/[0.05] text-pizza-gray hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-white'
@@ -788,22 +1059,22 @@ export default function PizzaCustomizer() {
                       disabled={isOutOfStock}
                       onClick={(e) => {
                         if (isOutOfStock) return;
-                        playSynthPop(450, 0.12, 'sine');
+                        playSound(450, 0.12, 'sine');
                         if (!isSelected) {
                           triggerFlyAnimation(v.name, e);
                         }
                         handleVeggieToggle(v.name);
                       }}
-                      className={`p-4 rounded-2xl border text-left flex justify-between items-center transition-all duration-300 relative group overflow-hidden ${
+                      className={`p-4 h-[72px] min-h-[72px] rounded-2xl border text-left flex justify-between items-center transition-all duration-300 relative group overflow-hidden ${
                         isOutOfStock 
-                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/20 border-transparent'
+                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/25 border-transparent'
                           : isSelected 
                           ? 'bg-gradient-to-r from-pizza-primary/15 to-pizza-gold/5 border-pizza-primary text-white shadow-glow' 
                           : 'bg-[#0A0706]/40 border-white/[0.05] text-pizza-gray hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-white'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="opacity-70 group-hover:scale-110 transition-transform duration-300">
+                        <div className="w-8 h-8 flex items-center justify-center shrink-0 opacity-70 group-hover:scale-110 transition-transform duration-300">
                           <ToppingIcon name={v.name} />
                         </div>
                         <div>
@@ -836,22 +1107,22 @@ export default function PizzaCustomizer() {
                       disabled={isOutOfStock}
                       onClick={(e) => {
                         if (isOutOfStock) return;
-                        playSynthPop(480, 0.12, 'sine');
+                        playSound(480, 0.12, 'sine');
                         if (!isSelected) {
                           triggerFlyAnimation(m.name, e);
                         }
                         handleMeatToggle(m.name);
                       }}
-                      className={`p-4 rounded-2xl border text-left flex justify-between items-center transition-all duration-300 relative group overflow-hidden ${
+                      className={`p-4 h-[72px] min-h-[72px] rounded-2xl border text-left flex justify-between items-center transition-all duration-300 relative group overflow-hidden ${
                         isOutOfStock 
-                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/20 border-transparent'
+                          ? 'opacity-25 cursor-not-allowed bg-[#0A0706]/25 border-transparent'
                           : isSelected 
                           ? 'bg-gradient-to-r from-pizza-primary/15 to-pizza-gold/5 border-pizza-primary text-white shadow-glow' 
                           : 'bg-[#0A0706]/40 border-white/[0.05] text-pizza-gray hover:border-white/[0.12] hover:bg-white/[0.06] hover:text-white'
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="opacity-70 group-hover:scale-110 transition-transform duration-300">
+                        <div className="w-8 h-8 flex items-center justify-center shrink-0 opacity-70 group-hover:scale-110 transition-transform duration-300">
                           <ToppingIcon name={m.name} />
                         </div>
                         <div>
@@ -878,7 +1149,7 @@ export default function PizzaCustomizer() {
       {!mobileDrawerOpen && (
         <motion.button
           onClick={() => {
-            playSynthPop(500, 0.12, 'sine');
+            playSound(500, 0.12, 'sine');
             setMobileDrawerOpen(true);
           }}
           initial={{ scale: 0, opacity: 0 }}
@@ -937,7 +1208,7 @@ export default function PizzaCustomizer() {
               {/* Close button */}
               <button
                 onClick={() => {
-                  playSynthPop(300, 0.08, 'sine');
+                  playSound(300, 0.08, 'sine');
                   setMobileDrawerOpen(false);
                 }}
                 className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] text-white rounded-full z-50 transition-colors"
@@ -1001,42 +1272,74 @@ export default function PizzaCustomizer() {
 
               {/* Checkout / Quantity Section */}
               <div className="bg-[#16100D] border-t border-white/[0.06] p-6 space-y-4">
-                <div className="flex justify-between items-center max-w-md mx-auto">
-                  <div className="text-left">
-                    <span className="block text-[9px] text-pizza-subtle uppercase font-bold">Checkout Price</span>
-                    <span className="text-3xl font-black text-pizza-gold">₹{currentItemPrice * quantity}</span>
+                <div className="space-y-3 max-w-md mx-auto">
+                  {/* Pricing breakdown */}
+                  <div className="space-y-2 text-xs text-left">
+                    <div className="flex justify-between">
+                      <span className="text-pizza-gray font-semibold">Base Recipe Price:</span>
+                      <span className="font-bold">₹{pizza.price}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-pizza-gray font-semibold">Customization Cost:</span>
+                      <span className="font-bold text-pizza-primary">
+                        ₹{isCustomized ? (currentItemPrice - pizza.price) : 0}
+                      </span>
+                    </div>
+                    <div className="flex justify-between pt-2 border-t border-white/5 text-sm font-black text-white">
+                      <span>Grand Total:</span>
+                      <span className="text-2xl text-pizza-gold">
+                        ₹{(isCustomized ? currentItemPrice : pizza.price) * quantity}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="flex items-center bg-[#0F0B0A] border border-white/[0.08] rounded-xl px-2 py-1 shadow-premium">
-                    <button 
-                      onClick={() => {
-                        playSynthPop(300, 0.08, 'triangle');
-                        setQuantity(q => Math.max(1, q - 1));
-                      }}
-                      className="w-8 h-8 flex items-center justify-center font-black text-pizza-gray hover:text-white transition-colors"
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-xs text-pizza-gray font-semibold">Quantity:</span>
+                    <div className="flex items-center bg-[#0F0B0A] border border-white/[0.08] rounded-xl px-2 py-1 shadow-premium">
+                      <button 
+                        onClick={() => {
+                          playSound(300, 0.08, 'triangle');
+                          setQuantity(q => Math.max(1, q - 1));
+                        }}
+                        className="w-6 h-6 flex items-center justify-center font-black text-pizza-gray hover:text-white transition-colors"
+                      >
+                        -
+                      </button>
+                      <span className="w-6 text-center text-sm font-black text-white">{quantity}</span>
+                      <button 
+                        onClick={() => {
+                          playSound(350, 0.08, 'triangle');
+                          setQuantity(q => q + 1);
+                        }}
+                        className="w-6 h-6 flex items-center justify-center font-black text-pizza-gray hover:text-white transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2.5 pt-2">
+                    <button
+                      onClick={() => handleAddToCart(true)}
+                      disabled={!isCustomized}
+                      className={`w-full py-4 font-black rounded-2xl text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 ${
+                        isCustomized 
+                          ? 'bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white' 
+                          : 'bg-white/5 text-white/20 border border-white/5 cursor-not-allowed'
+                      }`}
                     >
-                      -
+                      <ShoppingBag className="w-4.5 h-4.5" />
+                      <span>Add Customized Pizza</span>
                     </button>
-                    <span className="w-8 text-center text-sm font-black text-white">{quantity}</span>
-                    <button 
-                      onClick={() => {
-                        playSynthPop(350, 0.08, 'triangle');
-                        setQuantity(q => q + 1);
-                      }}
-                      className="w-8 h-8 flex items-center justify-center font-black text-pizza-gray hover:text-white transition-colors"
+
+                    <button
+                      onClick={() => handleAddToCart(false)}
+                      className="w-full py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2"
                     >
-                      +
+                      <span>Order Original Recipe (₹{pizza.price})</span>
                     </button>
                   </div>
                 </div>
-
-                <button
-                  onClick={handleAddToCart}
-                  className="w-full max-w-md mx-auto py-4 bg-gradient-to-r from-pizza-primary to-pizza-secondary hover:shadow-glow text-white font-black rounded-2xl text-xs uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  <ShoppingBag className="w-4.5 h-4.5" />
-                  <span>Confirm and Checkout</span>
-                </button>
               </div>
             </motion.div>
           </motion.div>

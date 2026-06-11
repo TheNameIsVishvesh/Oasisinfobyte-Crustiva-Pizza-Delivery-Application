@@ -140,6 +140,46 @@ If the dashboard displays the active catalogs and inventory alerts, your environ
 
 ---
 
+## 💳 Razorpay Test Setup
+
+### Where Keys are Stored
+The Razorpay credentials are saved securely in the backend server configuration. They must **never** be hardcoded in frontend source files.
+* **File:** [server/.env](file:///e:/Pizza%20Delivery%20Application/server/.env)
+* **Variables:**
+  ```env
+  RAZORPAY_KEY_ID=rzp_test_Sykxiyt7GHDV0v
+  RAZORPAY_KEY_SECRET=FAfY9h3LXPWC7fGleSzuxup5
+  ```
+
+### How the Payment Flow Works
+1. **Dynamic Initialization:** When the customer clicks **Proceed to Razorpay (Test Mode)** on the checkout screen, the client calls `POST /api/payments/create-order` sending the cart total.
+2. **Order Creation:** The backend verifies ingredient stock levels from MongoDB and initializes a new payment order using the Razorpay Node.js SDK. It returns the `order_id`, `amount`, and `keyId` to the client.
+3. **Checkout Popup:** The client loads the Razorpay Standard Checkout SDK dynamically and displays the native secure payment modal using the returned `order_id`.
+4. **Signature Verification:** On successful payment, the client receives the `razorpay_order_id`, `razorpay_payment_id`, and `razorpay_signature` and sends them along with order details to `POST /api/payments/verify`.
+5. **Fulfillment:** The backend cryptographically validates the signature using HMAC SHA256. If valid:
+   * Decrements stock counts in the `Inventory` collection.
+   * Saves a Mongoose `Order` document with status `'Order Received'` and payment status `'Paid'`.
+   * Fires a low-stock email alert to admins if any ingredient drops below threshold.
+   * Dispatches an order confirmation receipt email to the user.
+   * Returns a successful response, prompting the client to clear the cart and redirect the customer to the live tracker dashboard `/orders`.
+
+### How to Test Payment
+1. Run both frontend and backend concurrently using `npm run dev` from the workspace root.
+2. Log in as a customer (e.g. `user@crustiva.com` / `userpassword123`).
+3. Add a pizza to the cart, navigate to the cart checkout page, fill in the address and phone number, and click **Proceed to Razorpay**.
+4. When the Razorpay payment modal opens, choose **Netbanking** (and select any bank) or **Card** payment.
+5. For **Card** payments, use the standard Razorpay Test Card details:
+   * **Card Number:** `4111 1111 1111 1111`
+   * **Expiry Date:** Any future date (e.g., `12/30`)
+   * **CVV:** `123`
+   * **OTP:** `12345` (or click **Success** on the Razorpay simulator screen)
+6. Choose the **Success** button to mock a successful payment response.
+7. Verify that you are redirected to the `/orders` dashboard and the order appears there under "Order Received".
+8. Login as an admin (`admin@crustiva.com` / `adminpassword123`) and verify that the order has appeared in the admin panel and inventory levels have reduced.
+
+---
+
+
 ## 🍕 Unique SaaS Features Built-In
 
 ### 1. Visual Customization Math

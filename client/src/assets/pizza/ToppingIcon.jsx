@@ -1,5 +1,18 @@
 import React from 'react';
 
+// Imported realistic topping assets
+import slicedMushroomsImg from './veggies/sliced-mushrooms.png';
+import sweetCornImg from './veggies/sweet-corn.png';
+import crispCapsicumImg from './veggies/crisp-capsicum.png';
+import redOnionsImg from './veggies/red-onions.png';
+import blackOlivesImg from './veggies/black-olives.png';
+import jalapenosImg from './veggies/jalapenos.png';
+
+import spicyPepperoniImg from './meat/spicy-pepperoni.png';
+import smokedChickenTikkaImg from './meat/smoked-chicken-tikka.png';
+import italianSausageImg from './meat/italian-sausage.png';
+import bbqHamImg from './meat/bbq-ham.png';
+
 // Defined random scatter positions for topping visual representations
 export const veggieScatter = {
   'Sliced Mushrooms': [
@@ -83,86 +96,59 @@ export const meatScatter = {
 };
 
 export default function ToppingIcon({ name }) {
+  let src = null;
+  let sizeClass = "w-6 h-6";
+
   switch (name) {
     case 'Sliced Mushrooms':
-      return (
-        <svg viewBox="0 0 24 24" className="w-6 h-6 drop-shadow-md">
-          <path d="M 6 11 C 6 6, 18 6, 18 11 C 18 13, 16 13, 15 11 C 14 9, 10 9, 9 11 C 8 13, 6 13, 6 11 Z" fill="#D7CCC8" stroke="#5D4037" strokeWidth="1.5" />
-          <path d="M 10 11 L 10 17 C 10 18.5, 14 18.5, 14 17 L 14 11 Z" fill="#BCAAA4" stroke="#5D4037" strokeWidth="1.5" />
-        </svg>
-      );
+      src = slicedMushroomsImg;
+      sizeClass = "w-7 h-7";
+      break;
     case 'Sweet Corn':
-      return (
-        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 drop-shadow-md">
-          <path d="M 12 3 C 15 6, 17 12, 12 21 C 7 12, 9 6, 12 3 Z" fill="#FFC107" stroke="#FF8F00" strokeWidth="1.2" />
-          <circle cx="11" cy="9" r="1.2" fill="#FFF" opacity="0.8" />
-        </svg>
-      );
+      src = sweetCornImg;
+      sizeClass = "w-3.5 h-3.5";
+      break;
     case 'Crisp Capsicum':
-      return (
-        <svg viewBox="0 0 24 24" className="w-5.5 h-3 drop-shadow-md">
-          <path d="M 3 10 A 9 9 0 0 1 21 10 A 7 7 0 0 0 3 10" fill="#35C26B" stroke="#1B5E20" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
-      );
+      src = crispCapsicumImg;
+      sizeClass = "w-6 h-6";
+      break;
     case 'Red Onions':
-      return (
-        <svg viewBox="0 0 24 24" className="w-5.5 h-5.5 drop-shadow-md">
-          <path d="M 4 12 A 8 8 0 0 1 20 12" fill="none" stroke="#BA68C8" strokeWidth="2.8" strokeLinecap="round" />
-          <path d="M 6 12 A 6 6 0 0 1 18 12" fill="none" stroke="#E1BEE7" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
-      );
+      src = redOnionsImg;
+      sizeClass = "w-6 h-6";
+      break;
     case 'Black Olives':
-      return (
-        <svg viewBox="0 0 24 24" className="w-4 h-4 drop-shadow-md">
-          <circle cx="12" cy="12" r="8" fill="#1C1816" stroke="#000" strokeWidth="1.8" />
-          <circle cx="12" cy="12" r="3.2" fill="#0F0B0A" />
-          <circle cx="9.5" cy="9.5" r="1.2" fill="#FFF" opacity="0.4" />
-        </svg>
-      );
+      src = blackOlivesImg;
+      sizeClass = "w-4.5 h-4.5";
+      break;
     case 'Jalapenos':
-      return (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 drop-shadow-md">
-          <circle cx="12" cy="12" r="8.5" fill="#2E7D32" stroke="#1B5E20" strokeWidth="1.5" />
-          <circle cx="12" cy="12" r="6" fill="#4CAF50" />
-          <circle cx="10" cy="10" r="1.2" fill="#FFF9C4" />
-          <circle cx="14" cy="11" r="1" fill="#FFF9C4" />
-          <circle cx="11" cy="14" r="1.1" fill="#FFF9C4" />
-        </svg>
-      );
+      src = jalapenosImg;
+      sizeClass = "w-6 h-6";
+      break;
     case 'Spicy Pepperoni':
-      return (
-        <svg viewBox="0 0 24 24" className="w-6.5 h-6.5 drop-shadow-lg">
-          <circle cx="12" cy="12" r="10" fill="url(#pepperoniGrad)" stroke="#9E0D0D" strokeWidth="1.5" />
-          <circle cx="8" cy="9" r="1" fill="#FFC107" opacity="0.8" />
-          <circle cx="15" cy="13" r="1.5" fill="#FFC107" opacity="0.6" />
-          <circle cx="11" cy="15" r="0.8" fill="#FFC107" opacity="0.7" />
-          <circle cx="12" cy="12" r="8.5" fill="none" stroke="#5A0000" strokeWidth="1" opacity="0.35" />
-        </svg>
-      );
+      src = spicyPepperoniImg;
+      sizeClass = "w-9 h-9";
+      break;
     case 'Smoked Chicken Tikka':
-      return (
-        <svg viewBox="0 0 24 24" className="w-5 h-5 drop-shadow-md">
-          <rect x="5" y="5" width="13" height="13" rx="2.5" fill="#D84315" stroke="#3E2723" strokeWidth="1.5" transform="rotate(15, 12, 12)" />
-          <line x1="8" y1="9.5" x2="15" y2="9.5" stroke="#3E2723" strokeWidth="1.2" />
-          <line x1="8" y1="13.5" x2="15" y2="13.5" stroke="#3E2723" strokeWidth="1.2" />
-        </svg>
-      );
-    case 'Italian Sausage':
-      return (
-        <svg viewBox="0 0 24 24" className="w-5.5 h-5.5 drop-shadow-md">
-          <path d="M 6 12 C 6 8, 12 6, 15 9 C 18 12, 15 15, 12 14 C 9 13, 6 16, 6 12 Z" fill="#8D6E63" stroke="#4E342E" strokeWidth="1.5" />
-          <circle cx="9" cy="11" r="0.6" fill="#81C784" />
-          <circle cx="13" cy="12" r="0.5" fill="#3E2723" />
-        </svg>
-      );
+      src = smokedChickenTikkaImg;
+      sizeClass = "w-7 h-7";
+      break;
     case 'BBQ Ham':
-      return (
-        <svg viewBox="0 0 24 24" className="w-5.5 h-5 drop-shadow-md">
-          <rect x="5" y="7" width="14" height="10" rx="1.5" fill="#F48FB1" stroke="#C2185B" strokeWidth="1.5" />
-          <line x1="8" y1="6" x2="16" y2="18" stroke="#AD1457" strokeWidth="1" strokeDasharray="2,2" />
-        </svg>
-      );
+      src = bbqHamImg;
+      sizeClass = "w-7 h-7";
+      break;
+    case 'Italian Sausage':
+      src = italianSausageImg;
+      sizeClass = "w-6 h-6";
+      break;
     default:
       return null;
   }
+
+  return (
+    <img 
+      src={src} 
+      alt={name} 
+      className={`${sizeClass} object-contain drop-shadow-md select-none pointer-events-none`} 
+    />
+  );
 }

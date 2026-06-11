@@ -36,6 +36,12 @@ const pizzaSchema = new mongoose.Schema(
       default: true,
       index: true,
     },
+    status: {
+      type: String,
+      enum: ['available', 'hidden', 'out_of_stock'],
+      default: 'available',
+      index: true,
+    },
   },
   {
     timestamps: true,

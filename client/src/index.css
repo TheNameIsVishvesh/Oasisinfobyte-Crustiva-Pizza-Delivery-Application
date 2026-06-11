@@ -15,25 +15,34 @@
 
 @layer utilities {
   .glass-card {
-    background: rgba(30, 21, 18, 0.7);
+    background: rgba(30, 21, 18, 0.75);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 122, 24, 0.1);
+    border: 1px solid rgba(255, 122, 24, 0.12);
   }
   
   .glass-dark {
-    background: rgba(22, 16, 13, 0.8);
+    background: rgba(22, 16, 13, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .luxury-glow {
+    box-shadow: 0 0 30px rgba(255, 122, 24, 0.15);
+  }
+
+  .luxury-glow-hover:hover {
+    box-shadow: 0 0 45px rgba(255, 122, 24, 0.25);
+    border-color: rgba(255, 122, 24, 0.3);
   }
   
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-pizza-primary to-pizza-gold;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-pizza-primary via-pizza-secondary to-pizza-highlight;
   }
 
   .text-glow {
-    text-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
+    text-shadow: 0 0 15px rgba(255, 122, 24, 0.6);
   }
 }
 
@@ -47,11 +56,49 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1A120F;
-  border: 1px solid rgba(255, 107, 53, 0.2);
-  border-radius: 4px;
+  background: #1E1512;
+  border: 2px solid #0F0B0A;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FF6B35;
+  background: #FF7A18;
 }
+
+/* Custom Core Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.03); }
+}
+
+.animate-float-slow {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 25s linear infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+

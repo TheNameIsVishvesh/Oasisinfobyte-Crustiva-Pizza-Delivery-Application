@@ -8,6 +8,7 @@ import authRoutes from './routes/authRoutes.js';
 import pizzaRoutes from './routes/pizzaRoutes.js';
 import inventoryRoutes from './routes/inventoryRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 
 // Import DB seeder
 import { seedDatabase } from './config/dbSeeder.js';
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/pizzas', pizzaRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Health Check Route
 app.get('/api/health', (req, res) => {

@@ -8,12 +8,24 @@ const API = axios.create({
   },
 });
 
-// Request Interceptor: Inject JWT token into Authorization header automatically
+// Request Interceptor: Inject correct JWT token based on routing context
 API.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('slice_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // If the request explicitly has an Authorization header, respect it
+    if (config.headers.Authorization) {
+      return config;
+    }
+
+    const isAdminPage = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+    const token = isAdminPage
+      ? localStorage.getItem('slice_admin_token')
+      : localStorage.getItem('slice_customer_token');
+
+    // Fallback if the requested token is empty but another session is active
+    const activeToken = token || localStorage.getItem('slice_customer_token') || localStorage.getItem('slice_admin_token');
+
+    if (activeToken) {
+      config.headers.Authorization = `Bearer ${activeToken}`;
     }
     return config;
   },
@@ -27,11 +39,40 @@ API.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Clear token and redirect user to login
-      localStorage.removeItem('slice_token');
-      localStorage.removeItem('slice_user');
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login?expired=true';
+      const authHeader = error.config?.headers?.Authorization || '';
+      const tokenSent = authHeader.startsWith('Bearer ') ? authHeader.substring(7) : '';
+      
+      const customerToken = localStorage.getItem('slice_customer_token');
+      const adminToken = localStorage.getItem('slice_admin_token');
+
+      if (tokenSent && tokenSent === adminToken) {
+        localStorage.removeItem('slice_admin_token');
+        localStorage.removeItem('slice_admin_user');
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login?expired=true&role=admin';
+        }
+      } else if (tokenSent && tokenSent === customerToken) {
+        localStorage.removeItem('slice_customer_token');
+        localStorage.removeItem('slice_customer_user');
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login?expired=true&role=customer';
+        }
+      } else {
+        // Fallback page-based check
+        const isAdminPage = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+        if (isAdminPage) {
+          localStorage.removeItem('slice_admin_token');
+          localStorage.removeItem('slice_admin_user');
+          if (window.location.pathname !== '/login') {
+            window.location.href = '/login?expired=true&role=admin';
+          }
+        } else {
+          localStorage.removeItem('slice_customer_token');
+          localStorage.removeItem('slice_customer_user');
+          if (window.location.pathname !== '/login') {
+            window.location.href = '/login?expired=true&role=customer';
+          }
+        }
       }
     }
     return Promise.reject(error);

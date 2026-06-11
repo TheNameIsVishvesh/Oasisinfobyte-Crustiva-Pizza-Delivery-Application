@@ -1,12 +1,30 @@
 import Pizza from '../models/Pizza.js';
 import Inventory from '../models/Inventory.js';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
-// @desc    Get all available pizzas
+// @desc    Get all available pizzas (Customers see available & out_of_stock; Admins see all)
 // @route   GET /api/pizzas
 // @access  Public
 export const getPizzas = async (req, res) => {
   try {
-    const pizzas = await Pizza.find({ isAvailable: true });
+    let query = { status: { $ne: 'hidden' } };
+
+    // Decode token to see if request is from Admin (who should see hidden pizzas)
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'local_pizza_development_secret_key_change_me');
+        const user = await User.findById(decoded.id);
+        if (user && user.role === 'admin') {
+          query = {}; // Admin sees all pizzas
+        }
+      } catch (err) {
+        // Invalid token or verification failed, continue as guest
+      }
+    }
+
+    const pizzas = await Pizza.find(query);
     res.status(200).json({ status: 'success', data: pizzas });
   } catch (error) {
     console.error('❌ Get Pizzas Error:', error);
@@ -42,11 +60,14 @@ export const getCustomizationOptions = async (req, res) => {
 // @access  Private/Admin
 export const createPizza = async (req, res) => {
   try {
-    const { name, description, price, category, image, isCustomizable } = req.body;
+    const { name, description, price, category, image, isCustomizable, status } = req.body;
 
     if (!name || !description || price === undefined) {
       return res.status(400).json({ status: 'error', message: 'Please provide pizza name, description, and price' });
     }
+
+    const statusVal = status || 'available';
+    const isAvailableVal = statusVal === 'available';
 
     const pizza = await Pizza.create({
       name,
@@ -55,6 +76,8 @@ export const createPizza = async (req, res) => {
       category,
       image,
       isCustomizable,
+      status: statusVal,
+      isAvailable: isAvailableVal,
     });
 
     res.status(201).json({ status: 'success', message: 'Pizza created successfully', data: pizza });
@@ -69,6 +92,11 @@ export const createPizza = async (req, res) => {
 // @access  Private/Admin
 export const updatePizza = async (req, res) => {
   try {
+    // Synchronize isAvailable based on status if status is updated
+    if (req.body.status !== undefined) {
+      req.body.isAvailable = req.body.status === 'available';
+    }
+
     const pizza = await Pizza.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,

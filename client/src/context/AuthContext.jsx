@@ -4,30 +4,59 @@ import API from '../services/api';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('slice_token') || null);
+  const [customerUser, setCustomerUser] = useState(null);
+  const [customerToken, setCustomerToken] = useState(localStorage.getItem('slice_customer_token') || null);
+  const [adminUser, setAdminUser] = useState(null);
+  const [adminToken, setAdminToken] = useState(localStorage.getItem('slice_admin_token') || null);
   const [loading, setLoading] = useState(true);
 
-  // Synchronize profile details when JWT token is loaded
+  // Synchronize profile details when JWT tokens are loaded
   const loadUser = async () => {
     try {
-      const res = await API.get('/api/auth/me');
-      setUser(res.data.user);
+      const cToken = localStorage.getItem('slice_customer_token');
+      const aToken = localStorage.getItem('slice_admin_token');
+
+      if (cToken) {
+        try {
+          const res = await API.get('/api/auth/me', {
+            headers: { Authorization: `Bearer ${cToken}` }
+          });
+          setCustomerUser(res.data.user);
+          setCustomerToken(cToken);
+        } catch (err) {
+          console.error('❌ Failed to restore customer session:', err.message);
+          localStorage.removeItem('slice_customer_token');
+          localStorage.removeItem('slice_customer_user');
+          setCustomerToken(null);
+          setCustomerUser(null);
+        }
+      }
+
+      if (aToken) {
+        try {
+          const res = await API.get('/api/auth/me', {
+            headers: { Authorization: `Bearer ${aToken}` }
+          });
+          setAdminUser(res.data.user);
+          setAdminToken(aToken);
+        } catch (err) {
+          console.error('❌ Failed to restore admin session:', err.message);
+          localStorage.removeItem('slice_admin_token');
+          localStorage.removeItem('slice_admin_user');
+          setAdminToken(null);
+          setAdminUser(null);
+        }
+      }
     } catch (err) {
       console.error('❌ Failed to restore session profile:', err.message);
-      logout();
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (token) {
-      loadUser();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
+    loadUser();
+  }, [customerToken, adminToken]);
 
   // Login Action
   const login = async (email, password) => {
@@ -36,11 +65,17 @@ export const AuthProvider = ({ children }) => {
       const res = await API.post('/api/auth/login', { email, password });
       const { token: jwtToken, user: userProfile } = res.data;
       
-      localStorage.setItem('slice_token', jwtToken);
-      localStorage.setItem('slice_user', JSON.stringify(userProfile));
-      
-      setToken(jwtToken);
-      setUser(userProfile);
+      if (userProfile.role === 'admin') {
+        localStorage.setItem('slice_admin_token', jwtToken);
+        localStorage.setItem('slice_admin_user', JSON.stringify(userProfile));
+        setAdminToken(jwtToken);
+        setAdminUser(userProfile);
+      } else {
+        localStorage.setItem('slice_customer_token', jwtToken);
+        localStorage.setItem('slice_customer_user', JSON.stringify(userProfile));
+        setCustomerToken(jwtToken);
+        setCustomerUser(userProfile);
+      }
       return { success: true };
     } catch (err) {
       const message = err.response?.data?.message || 'Login failed. Please try again.';
@@ -103,28 +138,59 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout Action
+  // Logout Customer Session
+  const logoutCustomer = () => {
+    localStorage.removeItem('slice_customer_token');
+    localStorage.removeItem('slice_customer_user');
+    setCustomerToken(null);
+    setCustomerUser(null);
+  };
+
+  // Logout Admin Session
+  const logoutAdmin = () => {
+    localStorage.removeItem('slice_admin_token');
+    localStorage.removeItem('slice_admin_user');
+    setAdminToken(null);
+    setAdminUser(null);
+  };
+
+  // Generic Logout wrapper based on browser context and active sessions
   const logout = () => {
-    localStorage.removeItem('slice_token');
-    localStorage.removeItem('slice_user');
-    setToken(null);
-    setUser(null);
+    if (window.location.pathname.startsWith('/admin')) {
+      if (adminUser) {
+        logoutAdmin();
+      } else {
+        logoutCustomer();
+      }
+    } else {
+      if (customerUser) {
+        logoutCustomer();
+      } else {
+        logoutAdmin();
+      }
+    }
   };
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        token,
+        customerUser,
+        customerToken,
+        adminUser,
+        adminToken,
+        user: window.location.pathname.startsWith('/admin') ? (adminUser || customerUser) : (customerUser || adminUser),
+        token: window.location.pathname.startsWith('/admin') ? (adminToken || customerToken) : (customerToken || adminToken),
         loading,
-        isAuthenticated: !!user,
-        isAdmin: user?.role === 'admin',
+        isAuthenticated: !!customerUser,
+        isAdmin: !!adminUser,
         login,
         register,
         verifyEmail,
         forgotPassword,
         resetPassword,
         logout,
+        logoutCustomer,
+        logoutAdmin,
       }}
     >
       {children}

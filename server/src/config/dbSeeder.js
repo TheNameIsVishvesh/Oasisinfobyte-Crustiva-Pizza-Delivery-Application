@@ -2,7 +2,7 @@ import Pizza from '../models/Pizza.js';
 import Inventory from '../models/Inventory.js';
 import User from '../models/User.js';
 
-const seedIngredients = [
+export const seedIngredients = [
   // 5 Bases
   { name: 'Thin Crust', category: 'base', stock: 50, threshold: 10, unitPrice: 40 },
   { name: 'Thick Crust', category: 'base', stock: 50, threshold: 10, unitPrice: 50 },
@@ -39,7 +39,7 @@ const seedIngredients = [
   { name: 'BBQ Ham', category: 'meat', stock: 35, threshold: 5, unitPrice: 65 },
 ];
 
-const seedPizzas = [
+export const seedPizzas = [
   {
     name: 'Margherita Premium',
     description: 'Classic melted Mozzarella on a premium Italian herb marinara sauce base, garnished with fresh basil oil.',
@@ -96,6 +96,12 @@ export const seedDatabase = async () => {
     if (pizzaCount === 0) {
       await Pizza.insertMany(seedPizzas);
       console.log('🌱 Successfully seeded baseline pizzas into Pizza collection.');
+    } else {
+      // Migrate existing pizzas to have default status if they don't
+      const result = await Pizza.updateMany({ status: { $exists: false } }, { $set: { status: 'available' } });
+      if (result.modifiedCount > 0) {
+        console.log(`🌱 Migrated ${result.modifiedCount} existing pizzas to default status 'available'.`);
+      }
     }
 
     // 3. Create Default Administrator (for easy intern testing!)

@@ -70,8 +70,6 @@ export const updateInventoryItem = async (req, res) => {
 };
 
 // @desc    Admin: Delete ingredient
-// @route   DELETE /api/inventory/:id
-// @access  Private/Admin
 export const deleteInventoryItem = async (req, res) => {
   try {
     const item = await Inventory.findByIdAndDelete(req.params.id);
@@ -82,5 +80,31 @@ export const deleteInventoryItem = async (req, res) => {
   } catch (error) {
     console.error('❌ Delete Inventory Item Error:', error);
     res.status(500).json({ status: 'error', message: 'Failed to delete ingredient' });
+  }
+};
+
+// @desc    Admin: Reseed baseline inventory and pizzas
+// @route   POST /api/inventory/reseed
+// @access  Private/Admin
+import { seedIngredients, seedPizzas } from '../config/dbSeeder.js';
+import Pizza from '../models/Pizza.js';
+
+export const reseedInventory = async (req, res) => {
+  try {
+    // Clear inventory and pizza tables
+    await Inventory.deleteMany({});
+    await Pizza.deleteMany({});
+
+    // Reseed collections
+    await Inventory.insertMany(seedIngredients);
+    await Pizza.insertMany(seedPizzas);
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Baseline inventory and pizza catalog reseeded successfully!'
+    });
+  } catch (error) {
+    console.error('❌ Reseed Inventory Error:', error);
+    res.status(500).json({ status: 'error', message: error.message || 'Failed to reseed inventory database' });
   }
 };
