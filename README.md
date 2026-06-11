@@ -59,9 +59,14 @@ CRUSTIVA is a production-grade, premium full-stack food-tech platform engineered
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshots & Video Demos
 
-Here is a visual showcase of the **CRUSTIVA Dark Gourmet Theme** and interactive customizer.
+Here is a visual showcase of the **CRUSTIVA Dark Gourmet Theme**, interactive customizer, and backend management interfaces.
+
+### 🎥 Live Pizza Customizer Video Demo
+*A video walkthrough demonstrating dynamic size configurations, crust base changes, white sauce spread transition, topping drop animations, and realistic visual layer placement.*
+
+<video src="docs/screenshots/pizza_customizer_demo.webm" width="100%" autoplay loop muted playsinline></video>
 
 ### Landing Page & Hero Section
 *A floating glassmorphic hero deck welcomes users with smooth Framer Motion transitions.*
@@ -76,15 +81,29 @@ Here is a visual showcase of the **CRUSTIVA Dark Gourmet Theme** and interactive
 ![Interactive Pizza Customizer](docs/screenshots/pizza_customizer.png)
 ![Interactive Alfredo Pizza Builder](docs/screenshots/pizza_customizer_alfredo.png)
 
+### Cart Page & Checkout Details
+*Premium cart overlay displaying itemized basket, selected base crust/sauces/toppings, and contact checkout details.*
+![Crustiva Cart Page](docs/screenshots/cart_page.png)
+
+### Live Order Tracker
+*Real-time stepper showing preparation states in the kitchen.*
+![Crustiva Order Tracker](docs/screenshots/order_tracker.png)
+
+### Admin Console & Analytics Dashboard
+*SVG charts displaying financial analytics, kitchen statuses, and low-stock inventory alerts.*
+![Crustiva Admin Dashboard](docs/screenshots/admin_dashboard.png)
+
+### Inventory Stock Management
+*Track individual ingredient stock levels, unit pricing, and thresholds.*
+![Crustiva Admin Inventory](docs/screenshots/admin_inventory.png)
+
+### Gourmet Pizza Menu CRUD
+*Full CRUD controls to add, adjust prices, edit details, and hide/show recipes.*
+![Crustiva Admin Menu](docs/screenshots/admin_menu.png)
+
 ### Project Verification
 *Full landing validation screenshot showing responsive grid cards and details.*
 ![Crustiva Home Gourmet Verification](docs/screenshots/crustiva_home_gourmet_verification.webp)
-
-### Gallery Placeholders (TODO)
-* `Cart Page Preview` — *To be added in next release*
-* `Checkout & Payment Gateway` — *To be added in next release*
-* `Admin Dashboard & Line Charts` — *To be added in next release*
-* `Inventory Stock Management` — *To be added in next release*
 
 ---
 
