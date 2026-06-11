@@ -101,10 +101,6 @@ Here is a visual showcase of the **CRUSTIVA Dark Gourmet Theme**, interactive cu
 *Full CRUD controls to add, adjust prices, edit details, and hide/show recipes.*
 ![Crustiva Admin Menu](docs/screenshots/admin_menu.png)
 
-### Project Verification
-*Full landing validation screenshot showing responsive grid cards and details.*
-![Crustiva Home Gourmet Verification](docs/screenshots/crustiva_home_gourmet_verification.webp)
-
 ---
 
 ## 🏃 Demo Flow
