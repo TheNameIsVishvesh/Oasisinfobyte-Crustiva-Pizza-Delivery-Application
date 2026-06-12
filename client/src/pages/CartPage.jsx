@@ -336,24 +336,7 @@ export default function CartPage() {
                   Please log in or register a customer account to unlock live doorstep tracking, secure Razorpay checkout, and personal order logs.
                 </p>
 
-                {/* Seeded Developer Credentials Display */}
-                <div className="bg-[#0F0B0A] border border-white/5 p-4 rounded-2xl space-y-3">
-                  <span className="text-[9px] font-black text-pizza-gold uppercase tracking-wider flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3 text-pizza-gold" />
-                    <span>DEMO DEV CREDENTIALS</span>
-                  </span>
-                  
-                  <div className="space-y-2 text-[11px] text-white/70">
-                    <div className="flex justify-between border-b border-white/5 pb-1">
-                      <span className="text-pizza-gray">Customer:</span>
-                      <span className="font-bold text-pizza-light font-mono select-all">user@crustiva.com / userpassword123</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-pizza-gray">Admin Dashboard:</span>
-                      <span className="font-bold text-pizza-light font-mono select-all">admin@crustiva.com / adminpassword123</span>
-                    </div>
-                  </div>
-                </div>
+
 
                 {/* Basket pricing summary visible to guest */}
                 <div className="bg-white/5 p-4 rounded-2xl border border-white/5 space-y-3 text-xs">

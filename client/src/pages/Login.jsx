@@ -150,21 +150,11 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="text-center mt-6 pt-6 border-t border-white/5 text-xs text-white/40 space-y-4">
+        <div className="text-center mt-6 pt-6 border-t border-white/5 text-xs text-white/40">
           <p>
             Don't have an account?{' '}
             <Link to="/register" className="text-pizza-primary font-bold hover:underline">Create Account</Link>
           </p>
-          <div className="bg-[#0F0B0A] p-3.5 rounded-xl border border-white/5 text-left text-[11px] leading-relaxed space-y-2">
-            <div className="flex gap-2">
-              <HelpCircle className="w-4 h-4 shrink-0 text-pizza-gold" />
-              <span className="font-bold text-white/70 block uppercase tracking-wider text-[9px]">Developer Demo Logins</span>
-            </div>
-            <div className="space-y-1 text-white/60">
-              <p>🟢 <strong className="text-pizza-light">Customer:</strong> <code className="text-pizza-primary font-mono">user@crustiva.com</code> / <code className="text-pizza-primary font-mono">userpassword123</code></p>
-              <p>👑 <strong className="text-pizza-light">Admin:</strong> <code className="text-pizza-primary font-mono">admin@crustiva.com</code> / <code className="text-pizza-primary font-mono">adminpassword123</code></p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
