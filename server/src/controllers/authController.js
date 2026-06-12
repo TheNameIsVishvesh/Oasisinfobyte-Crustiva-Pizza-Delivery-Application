@@ -28,25 +28,17 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ status: 'error', message: 'User already exists with this email address' });
     }
 
-    // Generate Verification Token
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const verificationTokenExpire = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
-
-    // Create User
+    // Create User (isVerified is true by default)
     const user = await User.create({
       name,
       email,
       password,
-      verificationToken,
-      verificationTokenExpire,
+      isVerified: true
     });
-
-    // Send Verification Email
-    await sendVerificationEmail(user.email, user.name, verificationToken);
 
     res.status(201).json({
       status: 'success',
-      message: 'Registration successful! Please check your email to verify your account.',
+      message: 'Registration successful! You can now log in.',
       userId: user._id,
     });
   } catch (error) {
@@ -110,13 +102,7 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ status: 'error', message: 'Invalid email or password' });
     }
 
-    // Check Verification Status
-    if (!user.isVerified) {
-      return res.status(403).json({
-        status: 'error',
-        message: 'Your email has not been verified yet. Please check your inbox for the activation link.',
-      });
-    }
+    // Check Verification Status (Bypassed)
 
     // Generate Authentication Token
     const token = generateToken(user._id, user.role);

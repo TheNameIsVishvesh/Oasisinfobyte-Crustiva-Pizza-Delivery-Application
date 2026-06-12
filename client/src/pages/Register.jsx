@@ -77,7 +77,7 @@ export default function Register() {
             <div className="flex items-start gap-3 text-xs leading-relaxed">
               <CheckCircle2 className="w-6 h-6 shrink-0 text-emerald-400" />
               <div>
-                <span className="font-bold block text-sm">Verify Your Account</span>
+                <span className="font-bold block text-sm">Registration Successful</span>
                 {successMessage}
               </div>
             </div>
