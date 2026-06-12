@@ -26,6 +26,7 @@ CRUSTIVA is a production-grade, premium full-stack food-tech platform engineered
 - [Folder Structure](#-folder-structure)
 - [Installation](#-installation)
 - [Environment Variables](#-environment-variables)
+- [MongoDB Atlas Setup](#-mongodb-atlas-setup)
 - [Authentication](#-authentication)
 - [Razorpay Setup](#-razorpay-setup)
 - [Admin Panel](#-admin-panel)
@@ -216,13 +217,61 @@ Vite dev server proxies all `/api/*` endpoints to the backend on `http://localho
 Create `server/.env` and configure:
 ```env
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/pizza_db
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster-url>/Crustiva?appName=TrimTechCluster
 JWT_SECRET=local_pizza_development_secret_key_change_me
 CLIENT_URL=http://localhost:5173
 RESEND_API_KEY=re_placeholder
 RAZORPAY_KEY_ID=rzp_test_placeholder
 RAZORPAY_KEY_SECRET=placeholder_secret
 ```
+
+---
+
+# 🌐 MongoDB Atlas Setup
+
+This project is configured to run with **MongoDB Atlas** for its cloud database. The data from the local `pizza_db` database has been fully migrated to the `Crustiva` database on MongoDB Atlas.
+
+### 🔌 Atlas Connection Instructions
+
+1. Log in to your MongoDB Atlas Account.
+2. Under your project, click **Database** and then click **Connect** for your cluster.
+3. Choose **Drivers** under connection methods.
+4. Copy the connection string and ensure the database name path is set to `Crustiva` (e.g. `...mongodb.net/Crustiva?...`).
+
+### 🔑 Environment Variables
+Update your `server/.env` file to use the Atlas connection string:
+```env
+MONGO_URI=mongodb+srv://trimtechUser:Trimtech%40123@trimtechcluster.mxfrdpz.mongodb.net/Crustiva?appName=TrimTechCluster
+```
+*Do not commit your connection credentials to git. Keep them strictly inside `server/.env`.*
+
+### 📦 Migration Notes
+The migration from the local database `pizza_db` to MongoDB Atlas was completed using custom utility scripts. The migration:
+* Preserved all MongoDB `ObjectId`s to keep data integrity.
+* Preserved `createdAt` and `updatedAt` timestamps.
+* Preserved relationships and references between collections.
+* Recreated all database indexes (unique and query indexes) on the Atlas cluster.
+
+### 💾 Backup Location
+The backup of the local MongoDB database is stored in:
+`pizza_db_backup/` in the workspace root.
+It contains the following EJSON files (which preserve MongoDB BSON types):
+* `users.json`
+* `pizzas.json`
+* `inventories.json`
+* `orders.json`
+
+### 🔄 Reseeding Instructions
+To perform a clean restore/migration of the backup database to MongoDB Atlas at any time:
+1. Navigate to the `server` directory:
+   ```bash
+   cd server
+   ```
+2. Run the migration script:
+   ```bash
+   node migrate.js
+   ```
+This will read the backups from `pizza_db_backup` and overwrite the target collections in MongoDB Atlas, verifying counts automatically.
 
 ---
 

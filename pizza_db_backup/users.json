@@ -1,0 +1,36 @@
+[
+  {
+    "_id": {
+      "$oid": "6a0dacaaf8aac2bf1e1a961f"
+    },
+    "name": "Crustiva Admin",
+    "email": "admin@crustiva.com",
+    "password": "$2a$10$KBsrJods1Vp0L2fjPiD.Wee.Kh3jpsIb8zHqnsTWDM17ZmrkoeQ8G",
+    "role": "admin",
+    "isVerified": true,
+    "createdAt": {
+      "$date": "2026-05-20T12:44:26.898Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:44:26.898Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a0dacabf8aac2bf1e1a9622"
+    },
+    "name": "Crustiva Customer",
+    "email": "user@crustiva.com",
+    "password": "$2a$10$/HLsA9bV.QSXvA1QAdb2guVRVHP/vJDeCBo12hBM39ZjGSMLvxU9i",
+    "role": "customer",
+    "isVerified": true,
+    "createdAt": {
+      "$date": "2026-05-20T12:44:27.075Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:44:27.075Z"
+    },
+    "__v": 0
+  }
+]

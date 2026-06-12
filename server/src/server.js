@@ -47,17 +47,23 @@ app.get('/api/health', (req, res) => {
 });
 
 // Database Connection
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/pizza_db';
+const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+  console.error('❌ Error: MONGO_URI environment variable is not defined.');
+  process.exit(1);
+}
 
 mongoose.connect(MONGO_URI)
   .then(async () => {
-    console.log('✅ Successfully connected to MongoDB.');
+    console.log('✅ Successfully connected to MongoDB Atlas.');
     // Trigger automatic baseline seeding
     await seedDatabase();
   })
   .catch((err) => {
     console.error('❌ MongoDB connection error:');
     console.error(err.message);
+    process.exit(1);
   });
 
 // Start Server

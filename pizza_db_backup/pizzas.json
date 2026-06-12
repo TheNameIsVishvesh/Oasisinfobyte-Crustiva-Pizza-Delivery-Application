@@ -1,0 +1,102 @@
+[
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13fa0"
+    },
+    "name": "Margherita Premium",
+    "description": "Classic melted Mozzarella on a premium Italian herb marinara sauce base, garnished with fresh basil oil.",
+    "price": 299,
+    "category": "veg",
+    "image": "/src/assets/pizza-logo.svg",
+    "isCustomizable": true,
+    "isAvailable": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.160Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T05:53:02.768Z"
+    },
+    "status": "available"
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13fa1"
+    },
+    "name": "Farmhouse Feast",
+    "description": "A colorful medley of sliced mushrooms, sweet corn, crisp capsicum, and fresh red onions loaded on cheese.",
+    "price": 399,
+    "category": "veg",
+    "image": "/src/assets/pizza-logo.svg",
+    "isCustomizable": true,
+    "isAvailable": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.160Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T05:53:02.768Z"
+    },
+    "status": "available"
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13fa2"
+    },
+    "name": "Fiery Chicken Delight",
+    "description": "Spicy chunks of smoked chicken tikka, sharp red onions, and fiery sliced jalapenos on a Schezwan base.",
+    "price": 499,
+    "category": "non-veg",
+    "image": "/src/assets/pizza-logo.svg",
+    "isCustomizable": true,
+    "isAvailable": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.160Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T05:53:02.768Z"
+    },
+    "status": "available"
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13fa3"
+    },
+    "name": "Pepperoni Overload",
+    "description": "Double portion of genuine cured Italian pork pepperoni loaded edge-to-edge over bubbling mozzarella.",
+    "price": 549,
+    "category": "non-veg",
+    "image": "/src/assets/pizza-logo.svg",
+    "isCustomizable": true,
+    "isAvailable": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.160Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T05:53:02.768Z"
+    },
+    "status": "available"
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13fa4"
+    },
+    "name": "Pesto Feta Mushroom",
+    "description": "Sauteed earthy mushrooms, rich feta crumbles, black olives, finished with a fresh basil pesto swirl.",
+    "price": 599,
+    "category": "gourmet",
+    "image": "/src/assets/pizza-logo.svg",
+    "isCustomizable": true,
+    "isAvailable": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.160Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T05:53:02.768Z"
+    },
+    "status": "available"
+  }
+]

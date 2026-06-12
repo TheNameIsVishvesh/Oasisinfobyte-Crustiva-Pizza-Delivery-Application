@@ -1,0 +1,427 @@
+[
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f84"
+    },
+    "name": "Thin Crust",
+    "category": "base",
+    "stock": 47,
+    "threshold": 10,
+    "unitPrice": 40,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.051Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T05:45:32.892Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f85"
+    },
+    "name": "Thick Crust",
+    "category": "base",
+    "stock": 50,
+    "threshold": 10,
+    "unitPrice": 50,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f86"
+    },
+    "name": "Cheese Burst Crust",
+    "category": "base",
+    "stock": 40,
+    "threshold": 8,
+    "unitPrice": 90,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f87"
+    },
+    "name": "Gluten-Free Crust",
+    "category": "base",
+    "stock": 35,
+    "threshold": 8,
+    "unitPrice": 70,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f88"
+    },
+    "name": "Whole Wheat Crust",
+    "category": "base",
+    "stock": 45,
+    "threshold": 10,
+    "unitPrice": 45,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f89"
+    },
+    "name": "Classic Marinara Sauce",
+    "category": "sauce",
+    "stock": 78,
+    "threshold": 15,
+    "unitPrice": 15,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T05:45:32.902Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f8a"
+    },
+    "name": "Spicy Schezwan Sauce",
+    "category": "sauce",
+    "stock": 65,
+    "threshold": 15,
+    "unitPrice": 20,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.053Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f8b"
+    },
+    "name": "Creamy Alfredo White Sauce",
+    "category": "sauce",
+    "stock": 49,
+    "threshold": 10,
+    "unitPrice": 30,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-08T12:37:23.345Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f8c"
+    },
+    "name": "Smokey BBQ Sauce",
+    "category": "sauce",
+    "stock": 60,
+    "threshold": 10,
+    "unitPrice": 25,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f8d"
+    },
+    "name": "Pesto Basil Sauce",
+    "category": "sauce",
+    "stock": 40,
+    "threshold": 8,
+    "unitPrice": 35,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f8e"
+    },
+    "name": "Mozzarella Cheese",
+    "category": "cheese",
+    "stock": 98,
+    "threshold": 20,
+    "unitPrice": 40,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T05:45:32.904Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f8f"
+    },
+    "name": "Cheddar Cheese",
+    "category": "cheese",
+    "stock": 70,
+    "threshold": 15,
+    "unitPrice": 50,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f90"
+    },
+    "name": "Parmesan Cheese",
+    "category": "cheese",
+    "stock": 50,
+    "threshold": 10,
+    "unitPrice": 60,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f91"
+    },
+    "name": "Feta Cheese",
+    "category": "cheese",
+    "stock": 45,
+    "threshold": 10,
+    "unitPrice": 55,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f92"
+    },
+    "name": "Vegan Almond Cheese",
+    "category": "cheese",
+    "stock": 29,
+    "threshold": 5,
+    "unitPrice": 75,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-08T12:37:23.348Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f93"
+    },
+    "name": "Sliced Mushrooms",
+    "category": "veggies",
+    "stock": 60,
+    "threshold": 10,
+    "unitPrice": 20,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f94"
+    },
+    "name": "Sweet Corn",
+    "category": "veggies",
+    "stock": 80,
+    "threshold": 10,
+    "unitPrice": 15,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f95"
+    },
+    "name": "Crisp Capsicum",
+    "category": "veggies",
+    "stock": 70,
+    "threshold": 10,
+    "unitPrice": 15,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f96"
+    },
+    "name": "Red Onions",
+    "category": "veggies",
+    "stock": 90,
+    "threshold": 15,
+    "unitPrice": 10,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f97"
+    },
+    "name": "Black Olives",
+    "category": "veggies",
+    "stock": 50,
+    "threshold": 8,
+    "unitPrice": 25,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f98"
+    },
+    "name": "Jalapenos",
+    "category": "veggies",
+    "stock": 50,
+    "threshold": 8,
+    "unitPrice": 25,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f99"
+    },
+    "name": "Spicy Pepperoni",
+    "category": "meat",
+    "stock": 45,
+    "threshold": 8,
+    "unitPrice": 60,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f9a"
+    },
+    "name": "Smoked Chicken Tikka",
+    "category": "meat",
+    "stock": 50,
+    "threshold": 8,
+    "unitPrice": 70,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f9b"
+    },
+    "name": "Italian Sausage",
+    "category": "meat",
+    "stock": 40,
+    "threshold": 8,
+    "unitPrice": 80,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "6a0da42cdc0541d80ff13f9c"
+    },
+    "name": "BBQ Ham",
+    "category": "meat",
+    "stock": 35,
+    "threshold": 5,
+    "unitPrice": 65,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    },
+    "updatedAt": {
+      "$date": "2026-05-20T12:08:12.054Z"
+    }
+  }
+]

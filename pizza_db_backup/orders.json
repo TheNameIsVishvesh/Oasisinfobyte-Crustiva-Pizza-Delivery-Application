@@ -1,0 +1,100 @@
+[
+  {
+    "_id": {
+      "$oid": "6a26b783ab29be779b9b77bc"
+    },
+    "user": {
+      "$oid": "6a0dacabf8aac2bf1e1a9622"
+    },
+    "items": [
+      {
+        "name": "Margherita Premium",
+        "size": "Small",
+        "quantity": 1,
+        "price": 589,
+        "customization": {
+          "base": "Thin Crust",
+          "sauce": "Creamy Alfredo White Sauce",
+          "cheese": "Vegan Almond Cheese",
+          "veggies": [],
+          "meat": []
+        },
+        "_id": {
+          "$oid": "6a26b783ab29be779b9b77bd"
+        }
+      },
+      {
+        "name": "Margherita Premium",
+        "size": "Medium",
+        "quantity": 1,
+        "price": 549,
+        "customization": {
+          "base": "Thin Crust",
+          "sauce": "Classic Marinara Sauce",
+          "cheese": "Mozzarella Cheese",
+          "veggies": [],
+          "meat": []
+        },
+        "_id": {
+          "$oid": "6a26b783ab29be779b9b77be"
+        }
+      }
+    ],
+    "totalAmount": 898,
+    "status": "Delivered",
+    "paymentStatus": "Paid",
+    "razorpayOrderId": "order_Sz8cMGJF0OWJm8",
+    "razorpayPaymentId": "pay_Sz8hhuiHkZVIOJ",
+    "razorpaySignature": "4525d5bf0a2ff9d8f42c2e81b81fad46c377ff568fe87485b20e911874310333",
+    "deliveryAddress": "33 Krishna Villa Society \n",
+    "deliveryPhone": "8320736609",
+    "createdAt": {
+      "$date": "2026-06-08T12:37:23.384Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-08T12:38:49.447Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6a2a4b7c6c8923eb8478092f"
+    },
+    "user": {
+      "$oid": "6a0dacabf8aac2bf1e1a9622"
+    },
+    "items": [
+      {
+        "name": "Margherita Premium",
+        "size": "Medium",
+        "quantity": 1,
+        "price": 299,
+        "customization": {
+          "base": "Thin Crust",
+          "sauce": "Classic Marinara Sauce",
+          "cheese": "Mozzarella Cheese",
+          "veggies": [],
+          "meat": []
+        },
+        "_id": {
+          "$oid": "6a2a4b7c6c8923eb84780930"
+        }
+      }
+    ],
+    "totalAmount": 299,
+    "status": "Delivered",
+    "paymentStatus": "Paid",
+    "razorpayOrderId": "order_T0DHv4GLAPKIIy",
+    "razorpayPaymentId": "pay_T0DI5KNmbXP2B4",
+    "razorpaySignature": "7615a6b4efb137db177988a83536aa33d970c86cf677df7e83bad6eced75679a",
+    "deliveryAddress": "krishnavilla society ",
+    "deliveryPhone": "1234567890",
+    "createdAt": {
+      "$date": "2026-06-11T05:45:32.930Z"
+    },
+    "updatedAt": {
+      "$date": "2026-06-11T05:47:49.348Z"
+    },
+    "__v": 0
+  }
+]
