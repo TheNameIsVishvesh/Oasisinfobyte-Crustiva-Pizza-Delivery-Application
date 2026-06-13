@@ -1,8 +1,15 @@
 import axios from 'axios';
 
+// Resolve the API URL from environment variables, falling back to Vite dev server proxy in development
+const getBaseURL = () => {
+  const url = import.meta.env.VITE_API_URL;
+  if (!url) return '';
+  return url.endsWith('/') ? url.slice(0, -1) : url;
+};
+
 // Create a global Axios instance
 const API = axios.create({
-  baseURL: '', // Empty base URL is routed through Vite dev server proxy
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },
