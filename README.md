@@ -210,11 +210,13 @@ npm run dev
 
 ## 🔑 Environment Variables
 
-### Client Setup (No variables required for development)
-Vite dev server proxies all `/api/*` endpoints to the backend on `http://localhost:5000` automatically.
+### 💻 Local Development Setup
 
-### Server Setup (`server/.env`)
-Create `server/.env` and configure:
+#### Client (Frontend)
+No variables are required for local development. The Vite dev server proxies all `/api/*` requests to the backend server running on `http://localhost:5000` automatically (defined in `client/vite.config.js`).
+
+#### Server (Backend - `server/.env`)
+Create a `.env` file inside the `server/` directory:
 ```env
 PORT=5000
 MONGO_URI=mongodb+srv://<username>:<password>@<cluster-url>/Crustiva?appName=TrimTechCluster
@@ -224,6 +226,25 @@ RESEND_API_KEY=re_placeholder
 RAZORPAY_KEY_ID=rzp_test_placeholder
 RAZORPAY_KEY_SECRET=placeholder_secret
 ```
+
+### 🚀 Production Deployment Setup
+
+#### Vercel Environment Variables (Frontend)
+In the Vercel dashboard project settings, configure:
+* `VITE_API_URL` — Set to your deployed Render backend API URL (e.g. `https://crustiva-backend.onrender.com`). *Do not add a trailing slash.*
+
+#### Render Environment Variables (Backend Web Service)
+In the Render dashboard web service settings, configure:
+* `PORT` — `5000` (Render sets this automatically, but ensure standard Express listener binds to it)
+* `NODE_ENV` — `production`
+* `MONGO_URI` — Your MongoDB Atlas production connection string
+* `JWT_SECRET` — A secure, secret string for authentication tokens
+* `JWT_EXPIRES_IN` — `7d`
+* `CLIENT_URL` — Your deployed Vercel frontend URL (e.g. `https://crustiva.vercel.app`)
+* `RESEND_API_KEY` — Your production Resend API Key
+* `EMAIL_FROM` — From address for transactional emails (e.g. `Crustiva Pizzeria <onboarding@resend.dev>`)
+* `RAZORPAY_KEY_ID` — Your Razorpay Key ID
+* `RAZORPAY_KEY_SECRET` — Your Razorpay Key Secret
 
 ---
 

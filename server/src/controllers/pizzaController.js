@@ -14,7 +14,7 @@ export const getPizzas = async (req, res) => {
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       try {
         const token = req.headers.authorization.split(' ')[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'local_pizza_development_secret_key_change_me');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded.id);
         if (user && user.role === 'admin') {
           query = {}; // Admin sees all pizzas

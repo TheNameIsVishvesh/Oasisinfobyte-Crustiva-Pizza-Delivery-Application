@@ -16,6 +16,23 @@ import { seedDatabase } from './config/dbSeeder.js';
 // Load environment variables
 dotenv.config();
 
+// Critical environment variables check
+const criticalEnvVars = ['MONGO_URI', 'JWT_SECRET'];
+const missingCritical = criticalEnvVars.filter((v) => !process.env[v]);
+if (missingCritical.length > 0) {
+  console.error(`❌ Critical Error: Environment variables missing: ${missingCritical.join(', ')}`);
+  console.error('Server shutting down. Please configure them in your environment.');
+  process.exit(1);
+}
+
+// Warning for integration services
+const serviceEnvVars = ['RAZORPAY_KEY_ID', 'RAZORPAY_KEY_SECRET', 'RESEND_API_KEY'];
+const missingServices = serviceEnvVars.filter((v) => !process.env[v] || process.env[v].includes('placeholder'));
+if (missingServices.length > 0) {
+  console.warn(`⚠️ Warning: Missing or placeholder values for: ${missingServices.join(', ')}`);
+  console.warn('Razorpay checkouts or Resend email delivery will not function properly.');
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -48,11 +65,6 @@ app.get('/api/health', (req, res) => {
 
 // Database Connection
 const MONGO_URI = process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-  console.error('❌ Error: MONGO_URI environment variable is not defined.');
-  process.exit(1);
-}
 
 mongoose.connect(MONGO_URI)
   .then(async () => {

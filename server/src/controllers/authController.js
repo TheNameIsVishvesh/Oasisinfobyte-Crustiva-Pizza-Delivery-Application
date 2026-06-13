@@ -5,7 +5,7 @@ import { sendVerificationEmail, sendForgotPasswordEmail } from '../utils/emailSe
 
 // Helper: Generate JWT Token
 const generateToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET || 'local_pizza_development_secret_key_change_me', {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   });
 };

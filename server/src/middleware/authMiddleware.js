@@ -11,7 +11,7 @@ export const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
 
       // Decode and verify token signature
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'local_pizza_development_secret_key_change_me');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Fetch user profile and attach to request
       req.user = await User.findById(decoded.id).select('-password');

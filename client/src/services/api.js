@@ -28,11 +28,8 @@ API.interceptors.request.use(
       ? localStorage.getItem('slice_admin_token')
       : localStorage.getItem('slice_customer_token');
 
-    // Fallback if the requested token is empty but another session is active
-    const activeToken = token || localStorage.getItem('slice_customer_token') || localStorage.getItem('slice_admin_token');
-
-    if (activeToken) {
-      config.headers.Authorization = `Bearer ${activeToken}`;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },

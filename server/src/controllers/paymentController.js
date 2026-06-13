@@ -99,7 +99,7 @@ export const createRazorpayOrder = async (req, res) => {
         order_id: rpOrder.id,
         amount: rpOrder.amount,
         currency: rpOrder.currency,
-        keyId: process.env.RAZORPAY_KEY_ID || 'rzp_test_Sykxiyt7GHDV0v'
+        keyId: process.env.RAZORPAY_KEY_ID
       },
     });
   } catch (error) {
@@ -127,7 +127,7 @@ export const verifyRazorpayPayment = async (req, res) => {
     }
 
     // 1. Verify payment signature authenticity using HMAC SHA256
-    const keySecret = process.env.RAZORPAY_KEY_SECRET || 'FAfY9h3LXPWC7fGleSzuxup5';
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
     const hmac = crypto.createHmac('sha256', keySecret);
     hmac.update(`${razorpay_order_id}|${razorpay_payment_id}`);
     const generatedSignature = hmac.digest('hex');
